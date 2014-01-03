@@ -1,0 +1,15 @@
+﻿<h3>OpenUrlRewriter</h3>
+<p class="Contributor">
+	Satrabel <br />
+	<a href="mailto:support@satrabel.be">support@satrabel.be</a><br />
+	<a href=http://www.satrabel.com>http://www.satrabel.be</a><br />
+</p>
+<hr/>
+<div class="License">
+	<h3>About the OpenUrlRewriter</h3>
+	<p class="Owner">
+		
+	</p>
+	
+	
+</div>

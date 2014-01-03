@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="OpenUrlRewriter">
+</Property><Property Name="Fichier solution" Value="C:\sacha\dnn\dnn71\DesktopModules\OpenUrlRewriter\OpenUrlRewriter.sln">
+</Property><Property Name="Date" Value="jeudi 11 juillet 2013">
+</Property><Property Name="Time" Value="19:43">
+</Property></Properties><Event ErrorLevel="0" Project="OpenUrlRewriter" Source="OpenUrlRewriter.csproj" Description="Projet correctement converti">
+</Event><Event ErrorLevel="3" Project="OpenUrlRewriter" Source="OpenUrlRewriter.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="OpenUrlRewriter.sln" Description="Solution correctement convertie">
+</Event><Event ErrorLevel="3" Project="" Source="OpenUrlRewriter.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="OpenUrlRewriter" Source="OpenUrlRewriter.csproj" Description="Analyse terminée : la mise à niveau n'est pas requise pour les fichiers projet.">
+</Event></UpgradeLog>

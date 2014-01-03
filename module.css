@@ -1,0 +1,37 @@
+.OpenUrlRewriterPanel 
+{
+    margin: 5px 10px 25px 10px;
+    padding: 15px 20px;
+    border: 2px #444 solid;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    
+}
+
+.DnnModule-OpenUrlRewriter .dnnGrid th,
+.DnnModule-OpenUrlRewriter .dnnGrid td
+{
+    text-align:left;
+    
+}
+    
+.OpenUrlRewriterPanel .dnnGrid td {padding-left : 5px;}    
+
+.dnnGridHeader
+{color:#333}
+
+.OpenUrlRewriterPanel .dnnPrimaryAction, 
+.OpenUrlRewriterPanel .dnnSecondaryAction, 
+.OpenUrlRewriterPanel .dnnTertiaryAction
+{
+ min-width : 50px;
+}
+
+#Components .dnnFormMessage 
+{
+    
+}
+
+#Components .dnnFormSuccess {background:#ecffeb url(../../images/success-icn.png) no-repeat 10px center;border:2px #64b657 solid;color:#358927; padding: 10px 10px 10px 40px;display:inline;margin: 0}
+
+#Components .dnnFormWarning{background:#feffce url(../../images/warning-icn.png) no-repeat 10px center;border:2px #cdb21f solid;color:#41370C;text-shadow:0px 1px 1px #fff;padding: 10px 10px 10px 40px;display:inline;margin: 0}

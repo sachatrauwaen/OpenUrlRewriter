@@ -1,0 +1,5 @@
+CREATE NONCLUSTERED INDEX [IX_{objectQualifier}OpenUrlRewriter_UrlRule_PortalId] ON {databaseOwner}[{objectQualifier}OpenUrlRewriter_UrlRule]
+	(
+	PortalId
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+GO

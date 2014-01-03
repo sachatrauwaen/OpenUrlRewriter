@@ -1,0 +1,48 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+
+
+
+/************************************************************/
+/*****              SqlDataProvider                     *****/
+/************************************************************/
+
+
+ALTER TABLE {databaseOwner}[{objectQualifier}OpenUrlRewriter_UrlLog] DROP CONSTRAINT [PK_{objectQualifier}OpenUrlRewriter_UrlLog]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_GetUrlLog]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_GetUrlLogByOriginalUrl]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_DeleteUrlLog]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_DeleteUrlLogByOriginalUrl]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_AddUrlLog]
+GO
+DROP TABLE {databaseOwner}[{objectQualifier}OpenUrlRewriter_UrlLog]
+GO
+
+DROP INDEX [IX_{objectQualifier}OpenUrlRewriter_UrlRule_PortalId] ON {databaseOwner}[{objectQualifier}OpenUrlRewriter_UrlRule]
+GO
+ALTER TABLE {databaseOwner}[{objectQualifier}OpenUrlRewriter_UrlRule] DROP CONSTRAINT [PK_{objectQualifier}OpenUrlRewriter_UrlRule]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_GetUrlRule]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_GetUrlRules]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_DeleteUrlRule]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_AddUrlRule]
+GO
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_UpdateUrlRule]
+GO
+DROP TABLE {databaseOwner}[{objectQualifier}OpenUrlRewriter_UrlRule]
+GO

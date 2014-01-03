@@ -1,0 +1,53 @@
+
+DROP PROCEDURE {databaseOwner}[{objectQualifier}OpenUrlRewriter_AddUrlRule]
+GO
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_AddUrlRule
+
+@DateTime                      datetime, 
+@UserId                        int,
+@RuleType                      int,
+@CultureCode                   nvarchar(50)          = null,
+@PortalId                      int,
+@TabId                         int                   = null,
+@Parameters                    nvarchar(255)         = null,
+@RemoveTab                     bit,
+@RuleAction                    int,	
+@Url                           nvarchar(255)         = null,
+@RedirectDestination           nvarchar(255)         = null,
+@RedirectStatus                int                   = null
+
+as
+
+declare @UrlLogHistory int
+
+insert into {objectQualifier}OpenUrlRewriter_UrlRule ( 
+  DateTime,
+  UserId,
+  RuleType,
+  CultureCode,
+  PortalId, 
+  TabId,
+  Parameters,
+  RemoveTab,
+  RuleAction,
+  Url,
+  RedirectDestination,
+  RedirectStatus
+)
+values (
+  @DateTime,
+  @UserId,
+  @RuleType,
+  @CultureCode,
+  @PortalId, 
+  @TabId,
+  @Parameters,
+  @RemoveTab,
+  @RuleAction,
+  @Url,
+  @RedirectDestination,
+  @RedirectStatus
+)
+
+GO

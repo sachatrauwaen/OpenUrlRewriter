@@ -1,0 +1,301 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+
+/************************************************************/
+/*****              UrlLog                              *****/
+/************************************************************/
+
+CREATE TABLE {databaseOwner}{objectQualifier}OpenUrlRewriter_UrlLog (
+	[UrlLogId] [int] IDENTITY (1, 1) NOT NULL ,
+	[DateTime] [smalldatetime] NOT NULL ,
+	[PortalId] [int] NOT NULL ,
+	[TabId] [int] NULL ,
+	[StatusCode] [int] NULL ,
+	[UserId] [int] NULL ,
+	[Referrer] [nvarchar] (255) NULL ,
+	[Url] [nvarchar] (255) NULL ,
+	[OriginalUrl] [nvarchar] (255) NULL ,
+	[RedirectUrl] [nvarchar] (255) NULL ,
+	[UserAgent] [nvarchar] (255) NULL ,
+	[UserHostAddress] [nvarchar] (255) NULL ,
+	[UserHostName] [nvarchar] (255) NULL 
+) ON [PRIMARY]
+GO
+ALTER TABLE {databaseOwner}{objectQualifier}OpenUrlRewriter_UrlLog WITH NOCHECK ADD 
+	CONSTRAINT [PK_{objectQualifier}OpenUrlRewriter_UrlLog] PRIMARY KEY  CLUSTERED 
+	(
+		[UrlLogId]
+	)
+GO
+
+
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_AddUrlLog
+
+@DateTime                      datetime, 
+@PortalId                      int,
+@UserId                        int                   = null,
+@Referrer                      nvarchar(255)         = null,
+@Url                           nvarchar(255)         = null,
+@OriginalUrl                   nvarchar(255)         = null,
+@RedirectUrl                   nvarchar(255)         = null,
+@UserAgent                     nvarchar(255)         = null,
+@UserHostAddress               nvarchar(255)         = null,
+@UserHostName                  nvarchar(255)         = null,
+@TabId                         int                   = null,
+@StatusCode                    int                   = null
+
+as
+ 
+declare @UrlLogHistory int
+
+insert into {objectQualifier}OpenUrlRewriter_UrlLog ( 
+  DateTime,
+  PortalId,
+  UserId,
+  Referrer,
+  Url,
+  OriginalUrl,
+  RedirectUrl,
+  UserAgent,
+  UserHostAddress,
+  UserHostName,
+  TabId,
+  StatusCode
+)
+values (
+  @DateTime,
+  @PortalId,
+  @UserId,
+  @Referrer,
+  @Url,
+  @OriginalUrl,
+  @RedirectUrl,
+  @UserAgent,
+  @UserHostAddress,
+  @UserHostName,
+  @TabId,
+  @StatusCode
+)
+
+GO
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_DeleteUrlLog
+
+@DateTime                      datetime, 
+@PortalId                      int
+
+as
+
+delete
+from {objectQualifier}OpenUrlRewriter_UrlLog
+where  PortalId = @PortalId
+and    DateTime < @DateTime
+
+GO
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_DeleteUrlLogByOriginalUrl
+
+@PortalId    int,
+@OriginalUrl nvarchar(255)
+
+as
+
+delete
+from {objectQualifier}OpenUrlRewriter_UrlLog
+where  PortalId = @PortalId
+and OriginalUrl = @OriginalUrl
+
+GO
+
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_GetUrlLog
+
+@PortalId int,
+@StartDate datetime,
+@EndDate datetime
+
+as
+
+select *
+from {objectQualifier}OpenUrlRewriter_UrlLog
+where PortalId = @PortalId
+and DateTime between @StartDate and @EndDate
+order by DateTime desc
+
+GO
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_GetUrlLogByOriginalUrl
+
+@PortalId int,
+@OriginalUrl nvarchar(255)
+
+as
+
+select *
+from {objectQualifier}OpenUrlRewriter_UrlLog
+where PortalId = @PortalId
+and OriginalUrl = @OriginalUrl
+order by DateTime desc
+
+GO
+
+
+/************************************************************/
+/*****              UrlRule                             *****/
+/************************************************************/
+
+CREATE TABLE {databaseOwner}{objectQualifier}OpenUrlRewriter_UrlRule (
+	[UrlRuleId] [int] IDENTITY (1, 1) NOT NULL ,
+	[DateTime] [smalldatetime] NOT NULL ,
+	[UserId] [int] NOT NULL,
+    [RuleType] [int] NOT NULL ,
+    [CultureCode] [nvarchar](50) NULL,
+	[PortalId] [int] NOT NULL ,
+	[TabId] [int] NULL,
+	[Parameters] [nvarchar] (255) NULL ,
+	[RemoveTab] [bit] NULL,
+	[RuleAction] int NOT NULL,
+	[Url] [nvarchar] (255) NULL ,
+	[RedirectDestination] [nvarchar] (255) NULL,
+	[RedirectStatus] [int] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE {databaseOwner}{objectQualifier}OpenUrlRewriter_UrlRule WITH NOCHECK ADD 
+	CONSTRAINT [PK_{objectQualifier}OpenUrlRewriter_UrlRule] PRIMARY KEY  CLUSTERED 
+	(
+		[UrlRuleId]
+	)
+GO
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_AddUrlRule
+
+@DateTime                      datetime, 
+@UserId                        int,
+@RuleType                      int,
+@CultureCode                   nvarchar(50)          = null,
+@PortalId                      int,
+@TabId                         int                   = null,
+@Parameters                    nvarchar(255)         = null,
+@RemoveTab                     bit,
+@RuleAction                    int,	
+@Url                           nvarchar(255)         = null,
+@RedirectDestination           nvarchar(255)         = null,
+@RedirectStatus                int                   = null
+
+as
+
+declare @UrlLogHistory int
+
+insert into {objectQualifier}OpenUrlRewriter_UrlRule ( 
+  DateTime,
+  UserId,
+  PortalId,
+  RuleType,
+  CultureCode,
+  TabId,
+  Parameters,
+  RemoveTab,
+  RuleAction,
+  Url,
+  RedirectDestination,
+  RedirectStatus
+)
+values (
+  @DateTime,
+  @UserId,
+  @PortalId,
+  @RuleType,
+  @CultureCode,
+  @TabId,
+  @RuleAction,
+  @RemoveTab,
+  @RuleAction,
+  @Url,
+  @RedirectDestination,
+  @RedirectStatus
+)
+
+GO
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_UpdateUrlRule
+
+@UrlRuleId                     int, 
+@DateTime                      datetime, 
+@UserId                        int,
+@PortalId                      int,
+@RuleType                      int,
+@CultureCode                   nvarchar(50)          = null,
+@TabId                         int                   = null,
+@Parameters                    nvarchar(255)         = null,
+@RemoveTab                     bit,
+@RuleAction                    int,	
+@Url                           nvarchar(255)         = null,
+@RedirectDestination           nvarchar(255)         = null,
+@RedirectStatus                int                   = null
+
+as
+
+update {objectQualifier}OpenUrlRewriter_UrlRule 
+set    
+  DateTime = @DateTime,
+  UserId = @UserId,
+  PortalId = @PortalId,
+  RuleType = @RuleType,
+  CultureCode = @CultureCode,
+  TabId = @TabId,
+  Parameters = @Parameters,
+  RemoveTab = @RemoveTab,
+  RuleAction = @RuleAction,  
+  Url = @Url,
+  RedirectDestination = @RedirectDestination,
+  RedirectStatus = @RedirectStatus
+
+where  UrlRuleId = @UrlRuleId
+
+GO
+
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_DeleteUrlRule
+
+@UrlRuleId                     int
+
+as
+
+delete
+from {objectQualifier}OpenUrlRewriter_UrlRule
+where  UrlRuleId = @UrlRuleId
+
+GO
+
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_GetUrlRule
+
+@UrlRuleId int
+
+as
+
+select *
+from {objectQualifier}OpenUrlRewriter_UrlRule
+where UrlRuleId = @UrlRuleId
+
+GO
+
+create procedure {databaseOwner}{objectQualifier}OpenUrlRewriter_GetUrlRules
+
+@PortalId int
+
+as
+
+select *
+from {objectQualifier}OpenUrlRewriter_UrlRule
+where PortalId = @PortalId
+
+GO

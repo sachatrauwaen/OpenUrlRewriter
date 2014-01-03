@@ -1,0 +1,1388 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Satrabel.OpenUrlRewriter</name>
+    </assembly>
+    <members>
+        <member name="T:Satrabel.Modules.OpenUrlRewriter.Data.SqlDataProvider">
+            -----------------------------------------------------------------------------
+            <summary>
+            SQL Server implementation of the abstract DataProvider class
+            
+            This concreted data provider class provides the implementation of the abstract methods 
+            from data dataprovider.cs
+            
+            In most cases you will only modify the Public methods region below.
+            </summary>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="T:Satrabel.Modules.OpenUrlRewriter.Data.DataProvider">
+            -----------------------------------------------------------------------------
+            <summary>
+            An abstract class for the data access layer
+            
+            The abstract data provider provides the methods that a control data provider (sqldataprovider)
+            must implement. You'll find two commented out examples in the Abstract methods region below.
+            </summary>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlRule_View.Label1">
+            <summary>
+            Contrôle Label1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlRule_View.tbFilter">
+            <summary>
+            Contrôle tbFilter.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlRule_View.GridView1">
+            <summary>
+            Contrôle GridView1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="M:Satrabel.HttpModules.UrlRewriterLogging.getQSParams(System.String,System.Boolean)">
+            <summary>
+            getQSParams builds up a new querystring. This is necessary
+            in order to prep for navigateUrl.
+            we don't ever want a tabid, a ctl and a language parameter in the qs
+            also, the portalid param is not allowed when the tab is a supertab
+            (because NavigateUrl adds the portalId param to the qs)
+            </summary>
+            <history>
+                [erikvb]   20070814    added
+            </history>
+        </member>
+        <member name="M:Satrabel.HttpModules.UrlRewriterLogging.newUrl(System.String,System.Boolean@)">
+            <summary>
+            newUrl returns the new URL based on the new language.
+            Basically it is just a call to NavigateUrl, with stripped qs parameters
+            </summary>
+            <param name="newLanguage"></param>
+            <history>
+                [erikvb]   20070814    added
+            </history>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lStatus">
+            <summary>
+            Contrôle lStatus.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label1">
+            <summary>
+            Contrôle Label1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.gvCache">
+            <summary>
+            Contrôle gvCache.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.gvClashes">
+            <summary>
+            Contrôle gvClashes.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbViewCache">
+            <summary>
+            Contrôle lbViewCache.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.LinkButton1">
+            <summary>
+            Contrôle LinkButton1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label3">
+            <summary>
+            Contrôle Label3.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.gvRules">
+            <summary>
+            Contrôle gvRules.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbViewRules">
+            <summary>
+            Contrôle lbViewRules.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbAddRule">
+            <summary>
+            Contrôle lbAddRule.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbClearRules">
+            <summary>
+            Contrôle lbClearRules.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label2">
+            <summary>
+            Contrôle Label2.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.gvUrlLogs">
+            <summary>
+            Contrôle gvUrlLogs.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.gvDuplicates">
+            <summary>
+            Contrôle gvDuplicates.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbViewLog">
+            <summary>
+            Contrôle lbViewLog.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbClearLogs">
+            <summary>
+            Contrôle lbClearLogs.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label4">
+            <summary>
+            Contrôle Label4.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.gvProviders">
+            <summary>
+            Contrôle gvProviders.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label5">
+            <summary>
+            Contrôle Label5.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbDisableSiteIndex">
+            <summary>
+            Contrôle cbDisableSiteIndex.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbDisableTermsIndex">
+            <summary>
+            Contrôle cbDisableTermsIndex.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbDisablePivacyIndex">
+            <summary>
+            Contrôle cbDisablePivacyIndex.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label7">
+            <summary>
+            Contrôle Label7.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbLogEnabled">
+            <summary>
+            Contrôle cbLogEnabled.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbLogAuthentificatedUsers">
+            <summary>
+            Contrôle cbLogAuthentificatedUsers.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbLogEachUrlOneTime">
+            <summary>
+            Contrôle cbLogEachUrlOneTime.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbLogStatusCode200">
+            <summary>
+            Contrôle cbLogStatusCode200.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label9">
+            <summary>
+            Contrôle Label9.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label8">
+            <summary>
+            Contrôle Label8.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbW3C">
+            <summary>
+            Contrôle cbW3C.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label15">
+            <summary>
+            Contrôle Label15.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label14">
+            <summary>
+            Contrôle Label14.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbEnhanced404">
+            <summary>
+            Contrôle cbEnhanced404.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label13">
+            <summary>
+            Contrôle Label13.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.ddlTab">
+            <summary>
+            Contrôle ddlTab.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label6">
+            <summary>
+            Contrôle Label6.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lFriendlyUrlProvider">
+            <summary>
+            Contrôle lFriendlyUrlProvider.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lUrlRewriter">
+            <summary>
+            Contrôle lUrlRewriter.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lSitemapHandler">
+            <summary>
+            Contrôle lSitemapHandler.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lSitemapProvider">
+            <summary>
+            Contrôle lSitemapProvider.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lCachingProvider">
+            <summary>
+            Contrôle lCachingProvider.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.cbSitemapProvider">
+            <summary>
+            Contrôle cbSitemapProvider.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.gvPortals">
+            <summary>
+            Contrôle gvPortals.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbShowPortals">
+            <summary>
+            Contrôle lbShowPortals.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbSaveMeta">
+            <summary>
+            Contrôle lbSaveMeta.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label10">
+            <summary>
+            Contrôle Label10.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label11">
+            <summary>
+            Contrôle Label11.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.Label12">
+            <summary>
+            Contrôle Label12.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.tbUrl">
+            <summary>
+            Contrôle tbUrl.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lUrlResult">
+            <summary>
+            Contrôle lUrlResult.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbTestUrl">
+            <summary>
+            Contrôle lbTestUrl.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lbTestHtml">
+            <summary>
+            Contrôle lbTestHtml.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.View.lTrace">
+            <summary>
+            Contrôle lTrace.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="T:Satrabel.HttpModules.Provider.UrlRuleProvider">
+            <summary>
+            Description résumée de UrlProvider
+            </summary>
+        </member>
+        <member name="M:Satrabel.Services.Url.FriendlyUrl.OpenFriendlyUrlProvider.AddPage(System.String,System.String)">
+            -----------------------------------------------------------------------------
+            <summary>
+            AddPage adds the page to the friendly url
+            </summary>
+            <remarks>
+            </remarks>
+            <param name="path">The path to format.</param>
+            <param name="pageName">The page name.</param>
+            <returns>The formatted url</returns>
+            <history>
+            	[cnurse]	12/16/2004	created
+            </history>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="M:Satrabel.Services.Url.FriendlyUrl.OpenFriendlyUrlProvider.GetFriendlyAlias(System.String,System.String,System.Boolean)">
+            -----------------------------------------------------------------------------
+            <summary>
+            GetFriendlyAlias gets the Alias root of the friendly url
+            </summary>
+            <remarks>
+            </remarks>
+            <param name="path">The path to format.</param>
+            <param name="portalAlias">The portal alias of the site.</param>
+            <param name="isPagePath">Whether is a relative page path.</param>
+            <returns>The formatted url</returns>
+            <history>
+            	[cnurse]	12/16/2004	created
+            </history>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_View.Label1">
+            <summary>
+            Contrôle Label1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_View.tbFilter">
+            <summary>
+            Contrôle tbFilter.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_View.gvLogs">
+            <summary>
+            Contrôle gvLogs.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="T:DotNetNuke.Modules.OpenUrlRewriter.OpenUrlRewriterModuleBase">
+            <summary>
+            This base class can be used to define custom properties for multiple controls. 
+            An example module, DNNSimpleArticle (http://dnnsimplearticle.codeplex.com) uses this for an ArticleId
+            
+            Because the class inherits from PortalModuleBase, properties like ModuleId, TabId, UserId, and others, 
+            are accessible to your module's controls (that inherity from OpenUrlRewriterModuleBase
+            
+            </summary>
+        </member>
+        <member name="T:Satrabel.HttpModules.Provider.UserUrlRuleProvider">
+            <summary>
+            Description résumée de TabProvider
+            </summary>
+        </member>
+        <member name="T:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit">
+            -----------------------------------------------------------------------------
+            <summary>
+            The EditOpenUrlRewriter class is used to manage content
+            
+            Typically your edit control would be used to create new content, or edit existing content within your module.
+            The ControlKey for this control is "Edit", and is defined in the manifest (.dnn) file.
+            
+            Because the control inherits from OpenUrlRewriterModuleBase you have access to any custom properties
+            defined there, as well as properties from DNN such as PortalId, ModuleId, TabId, UserId and many more.
+            
+            </summary>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.Label1">
+            <summary>
+            Contrôle Label1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.HyperLink1">
+            <summary>
+            Contrôle HyperLink1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.Label2">
+            <summary>
+            Contrôle Label2.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.ddlRuleType">
+            <summary>
+            Contrôle ddlRuleType.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.ddlCultureCode">
+            <summary>
+            Contrôle ddlCultureCode.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.ddlTab">
+            <summary>
+            Contrôle ddlTab.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.tbParameters">
+            <summary>
+            Contrôle tbParameters.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.cbRemoveTab">
+            <summary>
+            Contrôle cbRemoveTab.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.ddlAction">
+            <summary>
+            Contrôle ddlAction.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.tbUrl">
+            <summary>
+            Contrôle tbUrl.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.tbRedirectDestination">
+            <summary>
+            Contrôle tbRedirectDestination.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.ddlRedirectStatus">
+            <summary>
+            Contrôle ddlRedirectStatus.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.lbSave">
+            <summary>
+            Contrôle lbSave.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.hlCancel">
+            <summary>
+            Contrôle hlCancel.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:DotNetNuke.Modules.OpenUrlRewriter.UrlRule_Edit.lbDelete">
+            <summary>
+            Contrôle lbDelete.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="T:DotNetNuke.Modules.OpenUrlRewriter.Settings">
+            -----------------------------------------------------------------------------
+            <summary>
+            The Settings class manages Module Settings
+            
+            Typically your settings control would be used to manage settings for your module.
+            There are two types of settings, ModuleSettings, and TabModuleSettings.
+            
+            ModuleSettings apply to all "copies" of a module on a site, no matter which page the module is on. 
+            
+            TabModuleSettings apply only to the current module on the current page, if you copy that module to
+            another page the settings are not transferred.
+            
+            If you happen to save both TabModuleSettings and ModuleSettings, TabModuleSettings overrides ModuleSettings.
+            
+            Below we have some examples of how to access these settings but you will need to uncomment to use.
+            
+            Because the control inherits from OpenUrlRewriterSettingsBase you have access to any custom properties
+            defined there, as well as properties from DNN such as PortalId, ModuleId, TabId, UserId and many more.
+            </summary>
+            -----------------------------------------------------------------------------
+            <summary>
+            Settings class.
+            </summary>
+            <remarks>
+            Auto-generated class.
+            </remarks>
+        </member>
+        <member name="T:DotNetNuke.Modules.OpenUrlRewriter.OpenUrlRewriterSettingsBase">
+            <summary>
+            This base class can be used to define custom properties for multiple controls. 
+            An example module, DNNSimpleArticle (http://dnnsimplearticle.codeplex.com) uses this for an ArticleId
+            
+            Because the class inherits from SettingsModuleBase, properties like ModuleId, TabId, UserId, and others, 
+            are accessible to your module's controls (that inherity from OpenUrlRewriterSettingsBase
+            
+            </summary>
+        </member>
+        <member name="M:DotNetNuke.Modules.OpenUrlRewriter.Settings.LoadSettings">
+            -----------------------------------------------------------------------------
+            <summary>
+            LoadSettings loads the settings from the Database and displays them
+            </summary>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="M:DotNetNuke.Modules.OpenUrlRewriter.Settings.UpdateSettings">
+            -----------------------------------------------------------------------------
+            <summary>
+            UpdateSettings saves the modified settings to the Database
+            </summary>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlRuleCache_View.Label1">
+            <summary>
+            Contrôle Label1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlRuleCache_View.tbFilter">
+            <summary>
+            Contrôle tbFilter.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlRuleCache_View.GridView1">
+            <summary>
+            Contrôle GridView1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_Settings.Label1">
+            <summary>
+            Contrôle Label1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_Settings.Label2">
+            <summary>
+            Contrôle Label2.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_Settings.cbLogEnabled">
+            <summary>
+            Contrôle cbLogEnabled.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_Settings.cbLogAuthentificatedUsers">
+            <summary>
+            Contrôle cbLogAuthentificatedUsers.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_Settings.cbLogEachUrlOneTime">
+            <summary>
+            Contrôle cbLogEachUrlOneTime.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_Settings.cbLogStatusCode200">
+            <summary>
+            Contrôle cbLogStatusCode200.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_Settings.lbSave">
+            <summary>
+            Contrôle lbSave.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.UrlLog_Settings.hlCancel">
+            <summary>
+            Contrôle hlCancel.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.Label2">
+            <summary>
+            Contrôle Label2.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.tbTableName">
+            <summary>
+            Contrôle tbTableName.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.Label3">
+            <summary>
+            Contrôle Label3.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.tbPrimaryKeyField">
+            <summary>
+            Contrôle tbPrimaryKeyField.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.Label4">
+            <summary>
+            Contrôle Label4.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.tbHtmlField">
+            <summary>
+            Contrôle tbHtmlField.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.Label5">
+            <summary>
+            Contrôle Label5.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.tbBaseUrl">
+            <summary>
+            Contrôle tbBaseUrl.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.Label6">
+            <summary>
+            Contrôle Label6.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.cbDecodeEncode">
+            <summary>
+            Contrôle cbDecodeEncode.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.lbTest">
+            <summary>
+            Contrôle lbTest.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.lbReplace">
+            <summary>
+            Contrôle lbReplace.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.Label1">
+            <summary>
+            Contrôle Label1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.tbFilter">
+            <summary>
+            Contrôle tbFilter.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:Satrabel.Modules.OpenUrlRewriter.TestHtml_View.GridView1">
+            <summary>
+            Contrôle GridView1.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="T:DotNetNuke.Modules.OpenUrlRewriter.Edit">
+            <summary>
+            EditOpenUrlRewriter class.
+            </summary>
+            <remarks>
+            Auto-generated class.
+            </remarks>
+            -----------------------------------------------------------------------------
+            <summary>
+            The EditOpenUrlRewriter class is used to manage content
+            
+            Typically your edit control would be used to create new content, or edit existing content within your module.
+            The ControlKey for this control is "Edit", and is defined in the manifest (.dnn) file.
+            
+            Because the control inherits from OpenUrlRewriterModuleBase you have access to any custom properties
+            defined there, as well as properties from DNN such as PortalId, ModuleId, TabId, UserId and many more.
+            
+            </summary>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="M:DotNetNuke.Modules.OpenUrlRewriter.Edit.Page_Load(System.Object,System.EventArgs)">
+            -----------------------------------------------------------------------------
+            <summary>
+            Page_Load runs when the control is loaded
+            </summary>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="T:Satrabel.Modules.OpenUrlRewriter.Components.OpenUrlRewriterController">
+            -----------------------------------------------------------------------------
+            <summary>
+            The Controller class for OpenUrlRewriter
+            
+            The FeatureController class is defined as the BusinessController in the manifest file (.dnn)
+            DotNetNuke will poll this class to find out which Interfaces the class implements. 
+            
+            The IPortable interface is used to import/export content from a DNN module
+            
+            The ISearchable interface is used by DNN to index the content of a module
+            
+            The IUpgradeable interface allows module developers to execute code during the upgrade 
+            process for a module.
+            
+            Below you will find stubbed out implementations of each, uncomment and populate with your own data
+            </summary>
+            -----------------------------------------------------------------------------
+        </member>
+        <member name="M:Satrabel.SitemapProviders.OpenUrlRewriterSitemapProvider.GetUrls(System.Int32,DotNetNuke.Entities.Portals.PortalSettings,System.String)">
+            <summary>
+              Includes page urls on the sitemap
+            </summary>
+            <remarks>
+              Pages that are included:
+              - are not deleted
+              - are not disabled
+              - are normal pages (not links,...)
+              - are visible (based on date and permissions)
+            </remarks>
+        </member>
+        <member name="M:Satrabel.SitemapProviders.OpenUrlRewriterSitemapProvider.GetPageUrl(DotNetNuke.Entities.Tabs.TabInfo,System.String,System.String[])">
+            <summary>
+              Return the sitemap url node for the page
+            </summary>
+            <param name = "objTab">The page being indexed</param>
+            <param name="language">Culture code to use in the URL</param>
+            <returns>A SitemapUrl object for the current page</returns>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:Satrabel.SitemapProviders.OpenUrlRewriterSitemapProvider.GetPriority(DotNetNuke.Entities.Tabs.TabInfo)">
+            <summary>
+              When page level priority is used, the priority for each page will be computed from 
+              the hierarchy level of the page. 
+              Top level pages will have a value of 1, second level 0.9, third level 0.8, ...
+            </summary>
+            <param name = "objTab">The page being indexed</param>
+            <returns>The priority assigned to the page</returns>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="F:ResponseFilterStream._stream">
+            <summary>
+            The original stream
+            </summary>
+        </member>
+        <member name="F:ResponseFilterStream._position">
+            <summary>
+            Current position in the original stream
+            </summary>
+        </member>
+        <member name="F:ResponseFilterStream._cacheStream">
+            <summary>
+            Stream that original content is read into
+            and then passed to TransformStream function
+            </summary>
+        </member>
+        <member name="F:ResponseFilterStream._cachePointer">
+            <summary>
+            Internal pointer that that keeps track of the size
+            of the cacheStream
+            </summary>
+        </member>
+        <member name="M:ResponseFilterStream.#ctor(System.IO.Stream)">
+            <summary>
+            
+            </summary>
+            <param name="responseStream"></param>
+        </member>
+        <member name="M:ResponseFilterStream.OnTransformCompleteString(System.String)">
+            <summary>
+            Allows transforming of strings
+            
+            Note this handler is internal and not meant to be overridden
+            as the TransformString Event has to be hooked up in order
+            for this handler to even fire to avoid the overhead of string
+            conversion on every pass through.
+            </summary>
+            <param name="responseText"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ResponseFilterStream.OnTransformCompleteStringInternal(System.IO.MemoryStream)">
+            <summary>
+            Wrapper method form OnTransformString that handles
+            stream to string and vice versa conversions
+            </summary>
+            <param name="ms"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ResponseFilterStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <summary>
+            
+            </summary>
+            <param name="offset"></param>
+            <param name="direction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ResponseFilterStream.SetLength(System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="length"></param>
+        </member>
+        <member name="M:ResponseFilterStream.Close">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ResponseFilterStream.Flush">
+            <summary>
+            Override flush by writing out the cached stream data
+            </summary>
+        </member>
+        <member name="M:ResponseFilterStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="buffer"></param>
+            <param name="offset"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ResponseFilterStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Overriden to capture output written by ASP.NET and captured
+            into a cached stream that is written out later when Flush()
+            is called.
+            </summary>
+            <param name="buffer"></param>
+            <param name="offset"></param>
+            <param name="count"></param>
+        </member>
+        <member name="P:ResponseFilterStream.IsCaptured">
+            <summary>
+            Determines whether the stream is captured
+            </summary>
+        </member>
+        <member name="P:ResponseFilterStream.IsOutputDelayed">
+            <summary>
+            Determines whether the Write method is outputting data immediately
+            or delaying output until Flush() is fired.
+            </summary>
+        </member>
+        <member name="E:ResponseFilterStream.CaptureStream">
+            <summary>
+            Event that captures Response output and makes it available
+            as a MemoryStream instance. Output is captured but won't 
+            affect Response output.
+            </summary>
+        </member>
+        <member name="E:ResponseFilterStream.CaptureString">
+            <summary>
+            Event that captures Response output and makes it available
+            as a string. Output is captured but won't affect Response output.
+            </summary>
+        </member>
+        <member name="E:ResponseFilterStream.TransformWrite">
+            <summary>
+            Event that allows you transform the stream as each chunk of
+            the output is written in the Write() operation of the stream.
+            This means that that it's possible/likely that the input 
+            buffer will not contain the full response output but only
+            one of potentially many chunks.
+            
+            This event is called as part of the filter stream's Write() 
+            operation.
+            </summary>
+        </member>
+        <member name="E:ResponseFilterStream.TransformWriteString">
+            <summary>
+            Event that allows you to transform the response stream as
+            each chunk of bytep[] output is written during the stream's write
+            operation. This means it's possibly/likely that the string
+            passed to the handler only contains a portion of the full
+            output. Typical buffer chunks are around 16k a piece.
+            
+            This event is called as part of the stream's Write operation.
+            </summary>
+        </member>
+        <member name="E:ResponseFilterStream.TransformStream">
+            <summary>
+            This event allows capturing and transformation of the entire 
+            output stream by caching all write operations and delaying final
+            response output until Flush() is called on the stream.
+            </summary>
+        </member>
+        <member name="E:ResponseFilterStream.TransformString">
+            <summary>
+            Event that can be hooked up to handle Response.Filter
+            Transformation. Passed a string that you can modify and
+            return back as a return value. The modified content
+            will become the final output.
+            </summary>
+        </member>
+        <member name="P:ResponseFilterStream.CanRead">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ResponseFilterStream.CanWrite">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ResponseFilterStream.Length">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ResponseFilterStream.Position">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Satrabel.Services.Sitemap.OpenSitemapBuilder.#ctor(DotNetNuke.Entities.Portals.PortalSettings)">
+            <summary>
+              Creates an instance of the sitemap builder class
+            </summary>
+            <param name = "ps">Current PortalSettings for the portal being processed</param>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:Satrabel.Services.Sitemap.OpenSitemapBuilder.BuildSiteMap(System.IO.TextWriter)">
+            <summary>
+              Builds the complete portal sitemap
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:Satrabel.Services.Sitemap.OpenSitemapBuilder.GetSitemapIndexFile(System.String,System.IO.TextWriter)">
+            <summary>
+              Returns the sitemap file that is part of a sitemapindex.
+            </summary>
+            <param name = "index">Index of the sitemap to return</param>
+            <param name = "output">The output stream</param>
+            <remarks>
+              The file should already exist since when using sitemapindexes the files are all cached to disk
+            </remarks>
+        </member>
+        <member name="M:Satrabel.Services.Sitemap.OpenSitemapBuilder.WriteSitemap(System.Boolean,System.IO.TextWriter,System.Int32,System.Collections.Generic.List{DotNetNuke.Services.Sitemap.SitemapUrl})">
+            <summary>
+              Generates a sitemap file
+            </summary>
+            <param name = "cached">Wheter the generated file should be cached or not</param>
+            <param name = "output">The output stream</param>
+            <param name = "index">For sitemapindex files the number of the file being generated, 0 otherwise</param>
+            <param name = "allUrls">The list of urls to be included in the file</param>
+            <remarks>
+              If the output should be cached it will generate a file under the portal directory (portals\[portalid]\sitemaps\) with 
+              the result of the generation. If the file is part of a sitemap, <paramref name = "index">index</paramref> will be appended to the
+              filename cached on disk ("sitemap_1.xml")
+            </remarks>
+        </member>
+        <member name="M:Satrabel.Services.Sitemap.OpenSitemapBuilder.WriteSitemapIndex(System.IO.TextWriter,System.Int32)">
+            <summary>
+              Generates a sitemapindex file
+            </summary>
+            <param name = "output">The output stream</param>
+            <param name = "totalFiles">Number of files that are included in the sitemap index</param>
+        </member>
+        <member name="M:Satrabel.Services.Sitemap.OpenSitemapBuilder.AddURL(DotNetNuke.Services.Sitemap.SitemapUrl)">
+            <summary>
+              Adds a new url to the sitemap
+            </summary>
+            <param name = "sitemapUrl">The url to be included in the sitemap</param>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:Satrabel.Services.Sitemap.OpenSitemapBuilder.CacheIsValid">
+            <summary>
+              Is sitemap is cached, verifies is the cached file exists and is still valid
+            </summary>
+            <returns>True is the cached file exists and is still valid, false otherwise</returns>
+        </member>
+        <member name="M:Satrabel.Services.Sitemap.OpenSitemapBuilder.WriteSitemapFileToOutput(System.String,System.IO.TextWriter)">
+            <summary>
+              When the sitemap is cached, reads the sitemap file and writes to the output stream
+            </summary>
+            <param name="file">File name</param>
+            <param name = "output">The output stream</param>
+        </member>
+    </members>
+</doc>

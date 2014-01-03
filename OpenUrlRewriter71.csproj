@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{863ECE01-EC68-4FB7-8CC4-787BDDF60100}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Satrabel.OpenUrlRewriter</RootNamespace>
+    <AssemblyName>Satrabel.OpenUrlRewriter</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <UseIISExpress>true</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineConstants>TRACE;DEBUG;DNN71</DefineConstants>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DocumentationFile>OpenUrlRewriter.xml</DocumentationFile>
+    <WarningLevel>1</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineConstants>TRACE;DNN71</DefineConstants>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DocumentationFile>OpenUrlRewriter.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetNuke, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\DotNetNuke.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.HttpModules, Version=6.2.1.11, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="DotNetNuke.Instrumentation, Version=6.0.1.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="DotNetNuke.Log4Net, Version=3.0.0.0, Culture=neutral, PublicKeyToken=53eb1fac7b60111f, processorArchitecture=MSIL" />
+    <Reference Include="DotNetNuke.WebControls, Version=2.4.0.598, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ApplicationBlocks.Data, Version=2.0.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="DotNetNuke" />
+    <Import Include="DotNetNuke.Common" />
+    <Import Include="DotNetNuke.Common.Utilities" />
+    <Import Include="DotNetNuke.Data" />
+    <Import Include="DotNetNuke.Entities" />
+    <Import Include="DotNetNuke.Entities.Tabs" />
+    <Import Include="DotNetNuke.Framework" />
+    <Import Include="DotNetNuke.Modules" />
+    <Import Include="DotNetNuke.Security" />
+    <Import Include="DotNetNuke.Services" />
+    <Import Include="DotNetNuke.Services.Exceptions" />
+    <Import Include="DotNetNuke.Services.Localization" />
+    <Import Include="DotNetNuke.UI" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Collections.Specialized" />
+    <Import Include="System.Configuration" />
+    <Import Include="System.Text" />
+    <Import Include="System.Text.RegularExpressions" />
+    <Import Include="System.Web" />
+    <Import Include="System.Web.Caching" />
+    <Import Include="System.Web.SessionState" />
+    <Import Include="System.Web.Security" />
+    <Import Include="System.Web.Profile" />
+    <Import Include="System.Web.UI" />
+    <Import Include="System.Web.UI.WebControls" />
+    <Import Include="System.Web.UI.WebControls.WebParts" />
+    <Import Include="System.Web.UI.HtmlControls" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\CacheController.cs" />
+    <Compile Include="Components\OpenUrlRewriterController.cs" />
+    <Compile Include="Components\UrlLog\BufferedUrlLog.cs" />
+    <Compile Include="Components\UrlLog\PurgeUrlLog.cs" />
+    <Compile Include="Components\UrlLog\UrlLogController.cs" />
+    <Compile Include="Components\UrlLog\UrlLogInfo.cs" />
+    <Compile Include="Components\UrlRule\UrlRuleController.cs" />
+    <Compile Include="Components\UrlRule\UrlRuleInfo.cs" />
+    <Compile Include="TestHtml_View.ascx.cs">
+      <DependentUpon>TestHtml_View.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestHtml_View.ascx.designer.cs">
+      <DependentUpon>TestHtml_View.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="HttpModules\PageFilter.cs" />
+    <Compile Include="HttpModules\ResponseFilterStream.cs" />
+    <Compile Include="HttpModules\UrlRewriterLogging.cs" />
+    <Compile Include="HttpModules\UrlRewriterSettings.cs" />
+    <Compile Include="HttpModules\UrlRewriteModuleUtils.cs" />
+    <Compile Include="HttpModules\W3CTransform.cs" />
+    <Compile Include="Providers\SitemapProviders\OpenUrlRewriterSitemapProvider\OpenUrlRewriterSitemapProvider.cs" />
+    <Compile Include="Services\Sitemap\OpenSitemapBuilder.cs" />
+    <Compile Include="Services\Sitemap\OpenSitemapHandler.cs" />
+    <Compile Include="Services\Sitemap\OpenSitemapUrl.cs" />
+    <Compile Include="UrlLog_Settings.ascx.cs">
+      <DependentUpon>UrlLog_Settings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UrlLog_Settings.ascx.designer.cs">
+      <DependentUpon>UrlLog_Settings.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="UrlLog_View.ascx.cs">
+      <DependentUpon>UrlLog_View.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UrlLog_View.ascx.designer.cs">
+      <DependentUpon>UrlLog_View.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="UrlRule_Edit.ascx.cs">
+      <DependentUpon>UrlRule_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UrlRule_Edit.ascx.designer.cs">
+      <DependentUpon>UrlRule_Edit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="UrlRuleCache_View.ascx.cs">
+      <DependentUpon>UrlRuleCache_View.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UrlRuleCache_View.ascx.designer.cs">
+      <DependentUpon>UrlRuleCache_View.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="UrlRule_View.ascx.cs">
+      <DependentUpon>UrlRule_View.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UrlRule_View.ascx.designer.cs">
+      <DependentUpon>UrlRule_View.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\DataProvider.cs" />
+    <Content Include="TestHtml_View.ascx" />
+    <Content Include="Documentation\Documentation.css" />
+    <Content Include="Documentation\Documentation.html" />
+    <Compile Include="HostSettings.ascx.cs">
+      <DependentUpon>HostSettings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HostSettings.ascx.designer.cs">
+      <DependentUpon>HostSettings.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="HttpModules\FriendlyUrlProvider.cs" />
+    <Compile Include="HttpModules\RewriterUtils.cs" />
+    <Compile Include="HttpModules\UrlFormatType.cs" />
+    <Compile Include="HttpModules\UrlRewriteModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\CachingProviders\OpenUrlRewriterFBCachingProvider\OpenUrlRewriterFBCachingProvider.cs" />
+    <Compile Include="Providers\DataProviders\SqlDataProvider\SqlDataProvider.cs" />
+    <Compile Include="Edit.ascx.designer.cs">
+      <DependentUpon>Edit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Edit.ascx.cs">
+      <DependentUpon>Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Providers\UrlRuleProviders\CoreUrlRuleProvider\CtlUrlRuleProvider.cs" />
+    <Compile Include="Providers\UrlRuleProviders\CoreUrlRuleProvider\LanguageUrlRuleProvider.cs" />
+    <Compile Include="Providers\UrlRuleProviders\CoreUrlRuleProvider\TabUrlRuleProvider.cs" />
+    <Compile Include="Providers\UrlRuleProviders\UrlBuilder.cs" />
+    <Compile Include="Providers\UrlRuleProviders\UrlRule.cs" />
+    <Compile Include="Providers\UrlRuleProviders\UrlRuleConfiguration.cs" />
+    <Compile Include="Providers\UrlRuleProviders\UrlRuleProvider.cs" />
+    <Compile Include="Providers\UrlRuleProviders\UserUrlRuleProvider.cs" />
+    <Compile Include="Settings.ascx.designer.cs">
+      <DependentUpon>Settings.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.ascx.cs">
+      <DependentUpon>Settings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="OpenUrlRewriterSettingsBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="OpenUrlRewriterModuleBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View.ascx.cs">
+      <DependentUpon>View.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View.ascx.designer.cs">
+      <DependentUpon>View.ascx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_LocalResources\Edit.ascx.resx" />
+    <None Include="App_LocalResources\Settings.ascx.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\View.ascx.resx" />
+    <None Include="BuildScripts\ModulePackage.targets" />
+    <None Include="BuildScripts\MSBuild.Community.Tasks.Targets" />
+    <None Include="OpenUrlRewriter71.dnn">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Providers\DataProviders\SqlDataProvider\00.02.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\00.03.00.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\01.01.02.SqlDataProvider" />
+    <None Include="Providers\DataProviders\SqlDataProvider\Uninstall.SqlDataProvider" />
+    <None Include="module.css" />
+    <None Include="ReleaseNotes.txt" />
+    <None Include="License.txt" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </Content>
+    <Content Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="UrlLog_View.ascx" />
+    <Content Include="UrlRule_Edit.ascx" />
+    <Content Include="UrlRuleCache_View.ascx" />
+    <Content Include="UrlRule_View.ascx" />
+    <Content Include="Edit.ascx" />
+    <Content Include="HostSettings.ascx" />
+    <Content Include="Settings.ascx" />
+    <Content Include="View.ascx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="'$(Solutions.VSVersion)' == '8.0'" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" Condition="'$(Solutions.VSVersion)' == '9.0'" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51345</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:51345/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:16964/</IISAppRootUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>http://localhost:16964/</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <Extension>zip</Extension>
+    <DNNFileName>OpenUrlRewriter71</DNNFileName>
+    <PackageName>OpenUrlRewriter71</PackageName>
+    <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\BuildScripts</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <Import Project="BuildScripts\ModulePackage.Targets" />
+  <Target Name="AfterBuild" DependsOnTargets="PackageModule">
+  </Target>
+  <ItemGroup>
+    <Content Include="App_LocalResources\UrlRule_Edit.ascx.resx" />
+    <Content Include="UrlLog_Settings.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\UrlLog_Settings.ascx.resx" />
+    <Content Include="js\jquery.uitablefilter.js" />
+  </ItemGroup>
+</Project>
