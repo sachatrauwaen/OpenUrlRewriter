@@ -1,8 +1,8 @@
 #region Copyright
 // 
-// DotNetNuke® - http://www.dotnetnuke.com
-// Copyright (c) 2002-2012
-// by DotNetNuke Corporation
+// Satrabel - http://www.satrabel.be
+// Copyright (c) 2002-2014
+// by Satrabel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
@@ -109,7 +109,7 @@ namespace Satrabel.HttpModules
 
             if (action.DoNotFound)
             {
-                string strURL = "ErrorPage.aspx?status=404&error=CustomRule";
+                //string strURL = "ErrorPage.aspx?status=404&error=CustomRule";
                 app.Response.Clear();
                 app.Response.StatusCode = 404;
                 app.Response.Status = "404 Not Found";
@@ -119,21 +119,36 @@ namespace Satrabel.HttpModules
                 if (TabId404 != -1)
                 {
                     //TabInfo errTab = tc.GetTab(errTabId, result.PortalId, true);
-                    strURL = Globals.glbDefaultPage + "?TabId=" + TabId404.ToString();
+                    string strURL = Globals.glbDefaultPage + "?TabId=" + TabId404.ToString();
                     var ps = new PortalSettings(TabId404, objPortalAlias);
                     app.Context.Items.Add("PortalSettings", ps);
-                }
 
-                if (app.Context.User == null)
-                {
-                    app.Context.User = Thread.CurrentPrincipal;
+                    if (app.Context.User == null)
+                    {
+                        app.Context.User = Thread.CurrentPrincipal;
+                    }
+                    app.Response.TrySkipIisCustomErrors = true;
+                    //spoof the basePage object so that the client dependency framework
+                    //is satisfied it's working with a page-based handler
+                    IHttpHandler spoofPage = new CDefault();
+                    app.Context.Handler = spoofPage;
+                    app.Context.Server.Transfer("~/" + strURL, true);
+
                 }
-                app.Response.TrySkipIisCustomErrors = true;
-                //881 : spoof the basePage object so that the client dependency framework
-                //is satisfied it's working with a page-based handler
-                IHttpHandler spoofPage = new CDefault();
-                app.Context.Handler = spoofPage;
-                app.Context.Server.Transfer("~/" + strURL, true);
+                else {
+                    const string errorPageHtmlHeader = @"<html><head><title>404 Page not found </title></head><body>";
+                    const string errorPageHtmlFooter = @"</body></html>";
+                    var errorPageHtml = new StringWriter();
+                    errorPageHtml.Write("<br> 404 Fle not found ");
+                    errorPageHtml.Write("<br> Raison : " + action.Raison);
+                    errorPageHtml.Write("<div style='font-weight:bolder'>Administrators</div>");
+                    errorPageHtml.Write("<div>Change this message by configuring a specific 404 Error Page.</div>");
+                    errorPageHtml.Write(string.Format("<a href=\"//{0}\">Goto website</a>", objPortalAlias.HTTPAlias));
+                    app.Response.Write(errorPageHtmlHeader);
+                    app.Response.Write(errorPageHtml.ToString());
+                    app.Response.Write(errorPageHtmlFooter);                
+                }
+                
                 app.Response.End();
             } else if (action.DoRedirect) {
                 app.Context.Items.Add("UrlRewrite:RedirectUrl", action.RedirectUrl);

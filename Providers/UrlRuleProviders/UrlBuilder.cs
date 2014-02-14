@@ -33,6 +33,8 @@ using DotNetNuke.Common;
 using DotNetNuke.ComponentModel;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Instrumentation;
+using Satrabel.HttpModules.Config;
 
 #endregion
 
@@ -69,10 +71,19 @@ namespace Satrabel.HttpModules.Provider
                 {
                     // Get all urls from provider
                     List<UrlRule> urls = _provider.GetRules(PortalId);
-                    foreach (UrlRule url in urls)
-                    {                      
-                        allUrls.Add(url);                       
+                    if (urls != null)
+                    {
+                        foreach (UrlRule url in urls)
+                        {
+                            allUrls.Add(url);
+                        }
                     }
+                    else
+                    {
+                        DnnLogger logger = DnnLogger.GetClassLogger(typeof(UrlRuleConfiguration));
+                        logger.Error("No urls for PortalId " + PortalId);
+                    }
+
                 }
             }
             return allUrls;

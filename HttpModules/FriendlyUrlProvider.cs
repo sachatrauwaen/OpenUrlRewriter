@@ -354,6 +354,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
 
         private static UrlRule GetTabUrl(int PortalId, string CultureCode, string parameter)
         {
+            parameter = parameter.ToLower();
             var rule = getRules(PortalId, CultureCode).FirstOrDefault(r => r.RuleType == UrlRuleType.Tab && r.Parameters == parameter);
             if (rule == null && !string.IsNullOrEmpty(CultureCode)) 
             {

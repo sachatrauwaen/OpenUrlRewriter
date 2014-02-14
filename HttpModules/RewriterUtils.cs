@@ -44,7 +44,7 @@ namespace Satrabel.HttpModules
         internal static void RewriteUrl(HttpContext context, string sendToUrl, ref string sendToUrlLessQString, ref string filePath)
         {
             string debugMsg = "{0}, {1}";
-            context.Response.AppendHeader("X-StbUrlRewriter-Debug", string.Format(debugMsg, context.Request.RawUrl, sendToUrl));
+            context.Response.AppendHeader("X-OpenUrlRewriter-Debug", string.Format(debugMsg, context.Request.RawUrl, sendToUrl));
 
             //System.Diagnostics.Debug.WriteLine(context.Request.RawUrl);
 

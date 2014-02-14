@@ -206,27 +206,47 @@ namespace Satrabel.HttpModules
 #endif
                     else
                     {
+                        PortalController pc = new PortalController();
                         Locale DefaultLocale = LocaleController.Instance.GetDefaultLocale(portalID);
-                        PortalInfo objPortal = new PortalController().GetPortal(portalID, DefaultLocale.Code);
+                        string ActiveLanguage = PortalController.GetActivePortalLanguage(portalID);
+                        if (ActiveLanguage != DefaultLocale.Code) // Browser language detection 
+                        {
+                            PortalInfo objPortal = pc.GetPortal(portalID, ActiveLanguage);
+                            var portalSettings = new PortalSettings(objPortal.HomeTabId, objPortalAlias);
 
-                        string sendToUrl = "~/" + Globals.glbDefaultPage + "?TabID=" + objPortal.HomeTabId;
-                        if (dicLocales.Count > 1)
-                        {
-                            sendToUrl = sendToUrl + "&language=" + objPortal.DefaultLanguage;
+                            app.Context.Items.Add("UrlRewrite:OriginalUrl", app.Request.Url.AbsoluteUri);
+                            string HomeUrl = Globals.NavigateURL(objPortal.HomeTabId, false, portalSettings, "", ActiveLanguage);
+                            app.Context.Items.Remove("UrlRewrite:OriginalUrl");
+                            action.DoRedirect = true;
+                            action.Raison += "+Active language";
+                            action.Status = 302;
+                            action.RedirectHomePage = true;
+                            action.RedirectUrl = HomeUrl;                            
+                            return;
                         }
+                        else
+                        {
+                            PortalInfo objPortal = pc.GetPortal(portalID, DefaultLocale.Code);
 
-                        if (!string.IsNullOrEmpty(action.QueryUrl))
-                        {
-                            sendToUrl = sendToUrl + action.QueryUrl.Replace('?', '&');
+                            string sendToUrl = "~/" + Globals.glbDefaultPage + "?TabID=" + objPortal.HomeTabId;
+                            if (dicLocales.Count > 1)
+                            {
+                                sendToUrl = sendToUrl + "&language=" + objPortal.DefaultLanguage;
+                            }
+
+                            if (!string.IsNullOrEmpty(action.QueryUrl))
+                            {
+                                sendToUrl = sendToUrl + action.QueryUrl.Replace('?', '&');
+                            }
+                            if (app != null)
+                            {
+                                app.Context.Items.Add("UrlRewrite:RewriteUrl", RewriterUtils.ResolveUrl(applicationPath, sendToUrl));
+                            }
+                            //RewriterUtils.RewriteUrl(app.Context, sendToUrl);
+                            action.DoReWrite = true;
+                            action.RewriteUrl = sendToUrl;
+                            return;
                         }
-                        if (app != null)
-                        {
-                            app.Context.Items.Add("UrlRewrite:RewriteUrl", RewriterUtils.ResolveUrl(applicationPath, sendToUrl));
-                        }
-                        //RewriterUtils.RewriteUrl(app.Context, sendToUrl);
-                        action.DoReWrite = true;
-                        action.RewriteUrl = sendToUrl;
-                        return;
                     }
                 }
                 
@@ -241,7 +261,6 @@ namespace Satrabel.HttpModules
                     {
                         app.Context.Items.Add("UrlRewrite:RewriteUrl", RewriterUtils.ResolveUrl(applicationPath, sendToUrl));
                     }
-                    //RewriterUtils.RewriteUrl(app.Context, sendToUrl);
                     action.DoReWrite = true;
                     action.RewriteUrl = sendToUrl;
                     return;
@@ -367,8 +386,11 @@ namespace Satrabel.HttpModules
                 {
                     return;
                 }
-                action.Raison = "Page not found";
-                action.DoNotFound = true;
+                //if (UrlRewiterSettings.IsManage404(objPortalAlias.PortalID))
+                {
+                    action.Raison = "Page not found";
+                    action.DoNotFound = true;
+                }
 
                 /*
                 tabPath = tabPath.Replace("/", "//");
@@ -437,7 +459,9 @@ namespace Satrabel.HttpModules
                 {
                     return true;
                 }
-                if (Url.LocalPath.ToLower().EndsWith(".aspx") && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
+                //if (Url.LocalPath.ToLower().EndsWith(".aspx") && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
+
+                if ((Directory.Exists(PhysicalPath) || File.Exists(PhysicalPath)) && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
                 {
                     return true;
                 }
@@ -1073,7 +1097,7 @@ namespace Satrabel.HttpModules
                 Match objMatch = Regex.Match(requestedPath, pattern, RegexOptions.IgnoreCase);
 
                 //if there is a match
-                if ((objMatch.Success))
+                if (objMatch.Success /* && (string.IsNullOrEmpty(rule.Parameters) || rule.Parameters == strQueryString) */ )
                 {
                     //create a new URL using the SendTo regex value
                     sendTo = RewriterUtils.ResolveUrl(ApplicationPath, Regex.Replace(requestedPath, pattern, rule.RedirectDestination, RegexOptions.IgnoreCase));
@@ -1087,7 +1111,7 @@ namespace Satrabel.HttpModules
             }
 
             //if a match was found to the urlrewrite rules
-            if (ruleFound != null)
+            if (ruleFound != null /*&& string.IsNullOrEmpty(ruleFound.Parameters)*/ )
             {
                 if (!String.IsNullOrEmpty(strQueryString))
                 {

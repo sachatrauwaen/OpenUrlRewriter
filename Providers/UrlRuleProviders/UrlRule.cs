@@ -105,7 +105,7 @@ namespace Satrabel.HttpModules.Provider
         public string Replace(string ModuleQueryString, string PageName)
         {
 
-            string internRegExp = GenerateRegExp(Parameters);
+            string internRegExp = GenerateRegExp(Parameters.ToLower());
             string externRegExp = Url.Replace("[pagename]", PageName).Replace("{", "${").Replace("[", "${").Replace("]", "}");
             Regex regex = new Regex(internRegExp, RegexOptions.IgnoreCase);
             if (regex.IsMatch(ModuleQueryString))

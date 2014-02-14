@@ -26,7 +26,7 @@ namespace Satrabel.Modules.OpenUrlRewriter
         {
             if (!Page.IsPostBack) {
 
-                GridView1.DataSource = UrlRuleController.GetUrlRules(PortalId).OrderByDescending(r=> r.RuleType);
+                GridView1.DataSource = UrlRuleController.GetUrlRules(PortalId).OrderByDescending(r=> r.RuleType).ThenByDescending(r => r.Parameters);
                 GridView1.DataBind();
 
 

@@ -248,7 +248,7 @@ namespace Satrabel.Modules.OpenUrlRewriter
             gvCache.DataSource = stats;
             gvCache.DataBind();
 
-            var clashes = from r in Rules
+            var clashes = from r in Rules /* .Where(r=> r.RuleType != UrlRuleType.Custom)*/
 
                         group r by new { r.RuleTypeString, r.CultureCode, r.TabId, r.Url } into g
                         where g.Count() > 1

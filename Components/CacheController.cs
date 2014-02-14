@@ -138,7 +138,8 @@ namespace Satrabel.OpenUrlRewriter.Components
             //without tabid
             if (rule == null)
             {
-                rule = GetFirstRule(rules, CultureCode);
+                var tabRules = rules.Where(r => r.TabId == 0); // added 7/2/2014
+                rule = GetFirstRule(tabRules, CultureCode);
             }
             if (rule == null)
             {
@@ -288,7 +289,7 @@ namespace Satrabel.OpenUrlRewriter.Components
             if (rule == null)
             {
                 // try to find a rule with de begin of url match a rule RedirectDestination
-                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && Url.StartsWith(r.RedirectDestination)  && r.Action == UrlRuleAction.Rewrite /*&& r.RemoveTab == RemoveTab*/);
+                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && Url.StartsWith(r.RedirectDestination+"/")  && r.Action == UrlRuleAction.Rewrite /*&& r.RemoveTab == RemoveTab*/);
                 //with tabid
                 if (TabId != Null.NullInteger)
                 {
