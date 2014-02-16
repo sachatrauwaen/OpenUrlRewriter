@@ -429,13 +429,13 @@ namespace Satrabel.HttpModules
                 app.Context.Items.Add("HostSettingsDictionary", HostController.Instance.GetSettingsDictionary());
 #if DNN71                
                 if (portalSettings.PortalAliasMappingMode == PortalSettings.PortalAliasMapping.Redirect &&
-                    portalAliasInfo != null && !portalAliasInfo.IsPrimary)
+                    portalAliasInfo != null && !portalAliasInfo.IsPrimary && !request.IsLocal)
                 {
 #else
                 if (portalSettings.PortalAliasMappingMode == PortalSettings.PortalAliasMapping.Redirect && 
                     !String.IsNullOrEmpty(portalSettings.DefaultPortalAlias) &&
                     portalAliasInfo != null &&
-                    portalAliasInfo.HTTPAlias != portalSettings.DefaultPortalAlias)
+                    portalAliasInfo.HTTPAlias != portalSettings.DefaultPortalAlias && !request.IsLocal)
                 {
 #endif
 
