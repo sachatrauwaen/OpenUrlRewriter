@@ -83,7 +83,7 @@ namespace Satrabel.HttpModules.Provider
             string AccentFrom = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÌÍÎÏìíîïÙÚÛÜùúûüÿÑñÇçĞğİıŞş₤€ß";
             string AccentTo   = "AAAAAAaaaaaaOOOOOOooooooEEEEeeeeIIIIiiiiUUUUuuuuyNnCcGgIiSsLEs";
 
-            Url = Url.ToLower();
+            Url = Url.ToLower().Trim();
 
             StringBuilder result = new StringBuilder(Url.Length);
             string ch = ""; int i = 0; int last = Url.ToCharArray().GetUpperBound(0);
