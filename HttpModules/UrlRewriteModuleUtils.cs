@@ -236,7 +236,7 @@ namespace Satrabel.HttpModules
 
                             if (!string.IsNullOrEmpty(action.QueryUrl))
                             {
-                                sendToUrl = sendToUrl + action.QueryUrl.Replace('?', '&');
+                                sendToUrl = sendToUrl + "&" + action.QueryUrl.TrimStart('?', '&');
                             }
                             if (app != null)
                             {
@@ -323,9 +323,9 @@ namespace Satrabel.HttpModules
                         sendToUrl += action.QueryParameters;
                     }
 
-                    if (!String.IsNullOrEmpty(url.Query))
+                    if (!String.IsNullOrEmpty(action.QueryUrl))
                     {
-                        sendToUrl = sendToUrl + "&" + action.QueryUrl.TrimStart('?');
+                        sendToUrl = sendToUrl + "&" + action.QueryUrl.TrimStart('?', '&');
                     }
 
 
@@ -650,7 +650,9 @@ namespace Satrabel.HttpModules
                     }
 
                     RedirectTo += UrlRewiterSettings.Current().FileExtension;
-                    RedirectTo += redirect.QueryUrl;
+                    redirect.QueryUrl= redirect.QueryUrl.TrimStart('?', '&');
+                    if (!string.IsNullOrEmpty(redirect.QueryUrl))
+                        RedirectTo += (RedirectTo.Contains('?') ? "&" : "?") + redirect.QueryUrl;
                 }
                 redirect.RedirectUrl = RedirectTo;
                 /*
@@ -1406,7 +1408,7 @@ namespace Satrabel.HttpModules
             if ((action.QueryUrl.Trim().Length > 0))
             {
                 //split the value into an array based on "/" ( ie. /tabid/##/ )
-                string parameters = action.QueryUrl.TrimStart('?').Trim();
+                string parameters = action.QueryUrl.TrimStart('?', '&').Trim();
                 var rule = cacheCtrl.GetModuleRuleByParameters(action.CultureCode, action.TabId, parameters);
 
                 if (rule != null)
