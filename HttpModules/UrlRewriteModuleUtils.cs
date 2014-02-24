@@ -488,17 +488,19 @@ namespace Satrabel.HttpModules
                     {
                         TabController tc = new TabController();
                         var tab = tc.GetTab(action.TabId, objPortalAlias.PortalID, false);
-                        action.CultureCode = tab.CultureCode;
-#if DNN71
-                        var primaryAliases = DotNetNuke.Entities.Portals.Internal.TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(objPortalAlias.PortalID).ToList();
-                        var alias = primaryAliases.FirstOrDefault(a => a.CultureCode == action.CultureCode);
-                        if (alias != null)
+                        if (tab != null)
                         {
-                            action.Alias = alias.HTTPAlias;
-                        }
+                            action.CultureCode = tab.CultureCode;
+#if DNN71
+                            var primaryAliases = DotNetNuke.Entities.Portals.Internal.TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(objPortalAlias.PortalID).ToList();
+                            var alias = primaryAliases.FirstOrDefault(a => a.CultureCode == action.CultureCode);
+                            if (alias != null)
+                            {
+                                action.Alias = alias.HTTPAlias;
+                            }
 #endif
-
-                        rule = cacheCtrl.GetRewriteTabRule(action.CultureCode, action.TabId);
+                            rule = cacheCtrl.GetRewriteTabRule(action.CultureCode, action.TabId);
+                        }
                     }
                     if (rule != null)
                     {
