@@ -429,7 +429,8 @@ namespace Satrabel.Modules.OpenUrlRewriter
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 UrlRuleProvider provider = (UrlRuleProvider)e.Row.DataItem;
-                e.Row.Cells[2].Text = provider.GetRules(PortalId).Count().ToString();
+                var Rules = provider.GetRules(PortalId);
+                e.Row.Cells[2].Text = Rules == null ? "" : Rules.Count.ToString();
                 bool isProviderEnabled = PortalController.GetPortalSettingAsBoolean(provider.Name + "_Enabled", PortalId, true);
                 CheckBox cbEnabled = (CheckBox)e.Row.FindControl("cbEnabled");
                 cbEnabled.Checked = isProviderEnabled;
