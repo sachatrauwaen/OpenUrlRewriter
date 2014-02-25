@@ -45,7 +45,9 @@ using Satrabel.Services.Log.UrlLog;
 using DotNetNuke.Entities.Users;
 using Satrabel.OpenUrlRewriter.Components;
 using DotNetNuke.Framework;
+#if DNN71
 using DotNetNuke.Entities.Urls;
+#endif
 
 
 
@@ -115,7 +117,7 @@ namespace Satrabel.HttpModules
                 app.Response.Status = "404 Not Found";
                 app.Response.AppendHeader("X-OpenUrlRewriter-404-Raison", action.Raison);
 
-                int TabId404 = PortalController.GetPortalSettingAsInteger(FriendlyUrlSettings.ErrorPage404Setting, objPortalAlias.PortalID, -1);
+                int TabId404 = PortalController.GetPortalSettingAsInteger(UrlRewiterSettings.ErrorPage404Setting, objPortalAlias.PortalID, -1);
                 if (TabId404 != -1)
                 {
                     //TabInfo errTab = tc.GetTab(errTabId, result.PortalId, true);

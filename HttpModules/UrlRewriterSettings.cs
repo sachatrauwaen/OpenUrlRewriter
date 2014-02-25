@@ -117,6 +117,8 @@ namespace Satrabel.HttpModules
             return false;
         }
 
+        public const string ErrorPage404Setting = "AUM_ErrorPage404";
+
         private const string Manage404 = ModuleQualifier + "Manage404";
         public static bool IsManage404(int PortalId)
         {

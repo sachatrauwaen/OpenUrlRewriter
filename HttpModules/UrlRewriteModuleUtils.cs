@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.IO;
 using Satrabel.HttpModules;
 using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Tabs;
@@ -20,6 +21,7 @@ using System.IO;
 #else
 using DotNetNuke.HttpModules.Config;
 using System.Diagnostics;
+using System.Text;
 #endif
 
 namespace Satrabel.HttpModules
@@ -121,7 +123,7 @@ namespace Satrabel.HttpModules
                     string langParms = langMatch.Value.TrimEnd('/');//in the format of /language/en-US only                
                     action.CultureCode = langParms.ToLower().Replace("/language/", "");
                     // construct the standard dnn path format /alias/culture/rest of the path
-                    action.LocalPath = ApplicationPath + "/" + action.CultureCode + "/"+ action.LocalPath.Substring(ApplicationPath.Length).Replace(langParms, "");
+                    action.LocalPath = applicationPath + "/" + action.CultureCode + "/"+ action.LocalPath.Substring(applicationPath.Length).Replace(langParms, "");
                     action.WorkUrl = action.WorkUrl.Replace(langParms, "");
                     //langParms = langParms.ToLower().Replace("/language", "");
                     //action.RedirectUrl = action.HostPort + action.LocalPath;
@@ -212,19 +214,22 @@ namespace Satrabel.HttpModules
                         if (ActiveLanguage != DefaultLocale.Code) // Browser language detection 
                         {
                             PortalInfo objPortal = pc.GetPortal(portalID, ActiveLanguage);
-                            var portalSettings = new PortalSettings(objPortal.HomeTabId, objPortalAlias);
+                            if (objPortal.HomeTabId > 0)
+                            {
+                                var portalSettings = new PortalSettings(objPortal.HomeTabId, objPortalAlias);
 
-                            app.Context.Items.Add("UrlRewrite:OriginalUrl", app.Request.Url.AbsoluteUri);
-                            string HomeUrl = Globals.NavigateURL(objPortal.HomeTabId, false, portalSettings, "", ActiveLanguage);
-                            app.Context.Items.Remove("UrlRewrite:OriginalUrl");
-                            action.DoRedirect = true;
-                            action.Raison += "+Active language";
-                            action.Status = 302;
-                            action.RedirectHomePage = true;
-                            action.RedirectUrl = HomeUrl;                            
-                            return;
+                                app.Context.Items.Add("UrlRewrite:OriginalUrl", app.Request.Url.AbsoluteUri);
+                                string HomeUrl = Globals.NavigateURL(objPortal.HomeTabId, false, portalSettings, "", ActiveLanguage);
+                                app.Context.Items.Remove("UrlRewrite:OriginalUrl");
+                                action.DoRedirect = true;
+                                action.Raison += "+Active language";
+                                action.Status = 302;
+                                action.RedirectHomePage = true;
+                                action.RedirectUrl = HomeUrl;
+                                return;
+                            }
                         }
-                        else
+                        
                         {
                             PortalInfo objPortal = pc.GetPortal(portalID, DefaultLocale.Code);
 
@@ -1251,17 +1256,18 @@ namespace Satrabel.HttpModules
                     TabPath = "";
                 }
             } while (TabPath.Length > 0);
-
-
-
         }
-
 
         private static PortalAliasInfo GetPortalAlias(Uri url, out string portalAlias)
         {
             PortalAliasInfo objPortalAlias = null;
             //string myAlias = Globals.GetDomainName(app.Request, true);
+            
+#if DNN71
             string myAlias = TestableGlobals.Instance.GetDomainName(url, true);
+#else
+            string myAlias = GetDomainName(url, true);
+#endif
             portalAlias = "";
             do
             {
@@ -1532,10 +1538,79 @@ namespace Satrabel.HttpModules
             return AspNetHostingPermissionLevel.None;
         }
 
+#if !DNN71
+        private static string GetDomainName(Uri requestedUri, bool parsePortNumber)
+        {
+            var domainName = new StringBuilder();
 
-        
-   
- 
+            // split both URL separater, and parameter separator
+            // We trim right of '?' so test for filename extensions can occur at END of URL-componenet.
+            // Test:   'www.aspxforum.net'  should be returned as a valid domain name.
+            // just consider left of '?' in URI
+            // Binary, else '?' isn't taken literally; only interested in one (left) string
+            string uri = requestedUri.ToString();
+            string hostHeader =  DotNetNuke.Common.Utilities.Config.GetSetting("HostHeader");
+            if (!String.IsNullOrEmpty(hostHeader))
+            {
+                uri = uri.ToLower().Replace(hostHeader.ToLower(), "");
+            }
+            int queryIndex = uri.IndexOf("?", StringComparison.Ordinal);
+            if (queryIndex > -1)
+            {
+                uri = uri.Substring(0, queryIndex);
+            }
+            string[] url = uri.Split('/');
+            for (queryIndex = 2; queryIndex <= url.GetUpperBound(0); queryIndex++)
+            {
+                bool needExit = false;
+                switch (url[queryIndex].ToLower())
+                {
+                    case "":
+                        continue;
+                    case "admin":
+                    case "controls":
+                    case "desktopmodules":
+                    case "mobilemodules":
+                    case "premiummodules":
+                    case "providers":
+                        needExit = true;
+                        break;
+                    default:
+                        // exclude filenames ENDing in ".aspx" or ".axd" --- 
+                        //   we'll use reverse match,
+                        //   - but that means we are checking position of left end of the match;
+                        //   - and to do that, we need to ensure the string we test against is long enough;
+                        if ((url[queryIndex].Length >= ".aspx".Length))
+                        {
+                            if (url[queryIndex].ToLower().LastIndexOf(".aspx", StringComparison.Ordinal) == (url[queryIndex].Length - (".aspx".Length)) ||
+                                url[queryIndex].ToLower().LastIndexOf(".axd", StringComparison.Ordinal) == (url[queryIndex].Length - (".axd".Length)) ||
+                                url[queryIndex].ToLower().LastIndexOf(".ashx", StringComparison.Ordinal) == (url[queryIndex].Length - (".ashx".Length)))
+                            {
+                                break;
+                            }
+                        }
+                        // non of the exclusionary names found
+                        domainName.Append((!String.IsNullOrEmpty(domainName.ToString()) ? "/" : "") + url[queryIndex]);
+                        break;
+                }
+                if (needExit)
+                {
+                    break;
+                }
+            }
+            if (parsePortNumber)
+            {
+                if (domainName.ToString().IndexOf(":", StringComparison.Ordinal) != -1)
+                {
+                    if (!Globals.UsePortNumber())
+                    {
+                        domainName = domainName.Replace(":" + requestedUri.Port, "");
+                    }
+                }
+            }
+            return domainName.ToString();
+        } 
+#endif
 
     }
 

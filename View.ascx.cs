@@ -26,8 +26,9 @@ using System.Xml;
 using DotNetNuke.Services.Installer;
 using System.Runtime.Serialization.Formatters.Binary;
 using DotNetNuke.Entities.Tabs;
+#if DNN71
 using DotNetNuke.Entities.Urls;
-
+#endif
 
 namespace Satrabel.Modules.OpenUrlRewriter
 {
@@ -70,7 +71,7 @@ namespace Satrabel.Modules.OpenUrlRewriter
                 cbLogEnabled.Checked = UrlRewiterSettings.IsLogEnabled(PortalId);
                 cbW3C.Checked = UrlRewiterSettings.IsW3C(PortalId);
                 cbEnhanced404.Checked = UrlRewiterSettings.IsManage404(PortalId);
-                ddlTab.SelectedValue = PortalController.GetPortalSetting(FriendlyUrlSettings.ErrorPage404Setting, PortalId, "-1");
+                ddlTab.SelectedValue = PortalController.GetPortalSetting(UrlRewiterSettings.ErrorPage404Setting, PortalId, "-1");
 
                 XmlDocument xmlConfig = Config.Load();
                 
@@ -362,7 +363,7 @@ namespace Satrabel.Modules.OpenUrlRewriter
             UrlRewiterSettings.SetW3C(PortalId, cbW3C.Checked);
             UrlRewiterSettings.SetManage404(PortalId, cbEnhanced404.Checked);
 
-            PortalController.UpdatePortalSetting(PortalId, FriendlyUrlSettings.ErrorPage404Setting, ddlTab.SelectedValue);
+            PortalController.UpdatePortalSetting(PortalId, UrlRewiterSettings.ErrorPage404Setting, ddlTab.SelectedValue);
 
             foreach (GridViewRow row in gvProviders.Rows)
             {
