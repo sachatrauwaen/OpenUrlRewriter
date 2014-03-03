@@ -135,6 +135,10 @@ namespace Satrabel.OpenUrlRewriter.Components
                 var tabRules = rules.Where(r => r.TabId == TabId);
                 rule = GetFirstRule(tabRules, CultureCode);
             }
+            else 
+            {
+                rule = GetFirstRule(rules, CultureCode);
+            }
             //without tabid
             if (rule == null)
             {
