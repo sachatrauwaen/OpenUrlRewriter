@@ -81,25 +81,25 @@ namespace Satrabel.HttpModules.Config
         public static UrlRuleConfiguration GenerateConfig(int portalId)
         {
             //string cacheKey = "UrlRuleConfig" + portalId;
-           
+
 
             var config = new UrlRuleConfiguration();
             config.Rules = new List<UrlRule>();
 
-            
+
 
             try
             {
                 // 1 cache by portal
                 //DnnLog.Trace("Get cache " + portalId );
                 //config = (UrlRuleConfiguration)DataCache.GetCache(cacheKey);
-                
+
                 //if ((config == null))
                 {
                     Stopwatch timer = new Stopwatch();
                     timer.Start();
-                    Logger.Info("Rebuild cache start " + portalId);                    
-                    
+                    Logger.Info("Rebuild cache start " + portalId);
+
                     //config = new UrlRuleConfiguration { Rules = new List<UrlRule>() };
 
                     // generate admin page
@@ -107,11 +107,11 @@ namespace Satrabel.HttpModules.Config
                     //if (false)
                     {
 
-                    var builder = new UrlBuilder();
-                    var Rules = builder.BuildUrlMap(portalId);                                        
-                    config.Rules.AddRange(Rules);
+                        var builder = new UrlBuilder();
+                        var Rules = builder.BuildUrlMap(portalId);
+                        config.Rules.AddRange(Rules);
 
-                   
+
 
                         var storedRules = UrlRuleController.GetUrlRules(portalId);
                         foreach (UrlRuleInfo storedRule in storedRules)
@@ -123,7 +123,7 @@ namespace Satrabel.HttpModules.Config
                         }
 
                         // add custom rules to cache
-                        foreach (UrlRuleInfo storedRule in storedRules.Where(r => r.RuleType == (int)UrlRuleType.Custom /* && r.RuleAction == (int)UrlRuleAction.Redirect */) ) // custom rule
+                        foreach (UrlRuleInfo storedRule in storedRules.Where(r => r.RuleType == (int)UrlRuleType.Custom /* && r.RuleAction == (int)UrlRuleAction.Redirect */)) // custom rule
                         {
                             UrlRule rule = new UrlRule()
                             {
@@ -169,7 +169,7 @@ namespace Satrabel.HttpModules.Config
                                     rule.RedirectDestination = rewriteRule.Url;
                                 }
                             }
-                            if (rule.RedirectDestination != null) 
+                            if (rule.RedirectDestination != null)
                             {
                                 rule.RedirectDestination = rule.RedirectDestination.ToLower();
                             }
@@ -296,7 +296,7 @@ namespace Satrabel.HttpModules.Config
                     timer.Stop();
                     double responseTime = timer.ElapsedMilliseconds / 1000.0;
 
-            
+
 
                     Logger.Info("Rebuild cache " + portalId + " (" + responseTime + ")");
                     //DataCache.SetCache(cacheKey, config, TimeSpan.FromMinutes(intCacheTimeout));
@@ -307,20 +307,32 @@ namespace Satrabel.HttpModules.Config
 
                     //DataCache.SetCache(cacheKey, config, null, absoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.AboveNormal, onRemove, false);
 
-                    
+
                 }
             }
             catch (Exception ex)
             {
                 //log it
                 var objEventLog = new EventLogController();
-                var objEventLogInfo = new LogInfo();
+                var objEventLogInfo = new LogInfo() { LogTypeKey = "GENERAL_EXCEPTION" };
                 objEventLogInfo.AddProperty("UrlRewriter.UrlRuleConfig", "GetConfig Failed");
                 objEventLogInfo.AddProperty("ExceptionMessage", ex.Message);
                 objEventLogInfo.AddProperty("PortalId", portalId.ToString());
-                objEventLogInfo.LogTypeKey = EventLogController.EventLogType.HOST_ALERT.ToString();
+                //objEventLogInfo.LogTypeKey = EventLogController.EventLogType.HOST_ALERT.ToString();
+
+
+                objEventLogInfo.AddProperty("Exception Type", ex.GetType().ToString());
+                objEventLogInfo.AddProperty("Message", ex.Message);
+                objEventLogInfo.AddProperty("Stack Trace", ex.StackTrace);
+                if (ex.InnerException != null)
+                {
+                    objEventLogInfo.AddProperty("Inner Exception Message", ex.InnerException.Message);
+                    objEventLogInfo.AddProperty("Inner Exception Stacktrace", ex.InnerException.StackTrace);
+                }
+                objEventLogInfo.BypassBuffering = true;
+
                 objEventLog.AddLog(objEventLogInfo);
-                Logger.Error(ex.Message, ex);
+                Logger.Error(ex);
                 //DataCache.SetCache(cacheKey, config, TimeSpan.FromMinutes(60));
             }
 
@@ -331,13 +343,13 @@ namespace Satrabel.HttpModules.Config
         [Obsolete("GetCacheKeys is deprecated, please use GetCacheKeys(int PortalId) instead.")]
         public static string[] GetCacheKeys()
         {
-            string[] CacheKeys = new string[]{};            
+            string[] CacheKeys = new string[] { };
             try
             {
                 string cacheKey = "OpenUrlRewriterCacheKeys";
                 CacheKeys = (string[])DataCache.GetCache(cacheKey);
                 if (CacheKeys == null)
-                {                                      
+                {
                     var builder = new UrlBuilder();
                     CacheKeys = builder.BuildCacheKeys();
                     DataCache.SetCache(cacheKey, CacheKeys);
@@ -347,13 +359,24 @@ namespace Satrabel.HttpModules.Config
             {
                 //log it
                 var objEventLog = new EventLogController();
-                var objEventLogInfo = new LogInfo();
-                objEventLogInfo.AddProperty("UrlRewriter.RewriterConfiguration", "GetConfig Failed");                
+
+                var objEventLogInfo = new LogInfo() { LogTypeKey = "GENERAL_EXCEPTION" };
+                objEventLogInfo.AddProperty("UrlRewriter.RewriterConfiguration", "GetCacheKeys Failed");
                 objEventLogInfo.AddProperty("ExceptionMessage", ex.Message);
-                
+
+                objEventLogInfo.AddProperty("Exception Type", ex.GetType().ToString());
+                objEventLogInfo.AddProperty("Message", ex.Message);
+                objEventLogInfo.AddProperty("Stack Trace", ex.StackTrace);
+                if (ex.InnerException != null)
+                {
+                    objEventLogInfo.AddProperty("Inner Exception Message", ex.InnerException.Message);
+                    objEventLogInfo.AddProperty("Inner Exception Stacktrace", ex.InnerException.StackTrace);
+                }
+                objEventLogInfo.BypassBuffering = true;
+
                 objEventLogInfo.LogTypeKey = EventLogController.EventLogType.HOST_ALERT.ToString();
                 objEventLog.AddLog(objEventLogInfo);
-                Logger.Error(objEventLogInfo, ex);
+                Logger.Error(ex);
 
             }
             return CacheKeys;
@@ -364,11 +387,11 @@ namespace Satrabel.HttpModules.Config
             string[] CacheKeys = new string[] { };
             try
             {
-                
-                    var builder = new UrlBuilder();
-                    CacheKeys = builder.BuildCacheKeys(PortalId);
-                    
-                
+
+                var builder = new UrlBuilder();
+                CacheKeys = builder.BuildCacheKeys(PortalId);
+
+
             }
             catch (Exception ex)
             {
@@ -379,18 +402,19 @@ namespace Satrabel.HttpModules.Config
                 objEventLogInfo.AddProperty("ExceptionMessage", ex.Message);
                 objEventLogInfo.LogTypeKey = EventLogController.EventLogType.HOST_ALERT.ToString();
                 objEventLog.AddLog(objEventLogInfo);
-                Logger.Error(objEventLogInfo, ex);
+                Logger.Error(ex);
 
             }
             return CacheKeys;
         }
 
-        private static void GenerateAdminTab(int PortalId) {
-            
+        private static void GenerateAdminTab(int PortalId)
+        {
+
 
             var tabID = TabController.GetTabByTabPath(PortalId, @"//Admin//OpenUrlRewriter", Null.NullString);
             if (tabID == Null.NullInteger)
-            {                
+            {
                 var adminTabID = TabController.GetTabByTabPath(PortalId, @"//Admin", Null.NullString);
 
                 /* dont work on dnn 7 -  generate new section "SEO Features" in admin menu
@@ -410,7 +434,7 @@ namespace Satrabel.HttpModules.Config
                     newParentTab.TabID = new TabController().AddTab(newParentTab);
                     tabID = newParentTab.TabID;
                 }
-                 */ 
+                 */
 
                 // create new page "Url Rules Cache"
                 int parentTabID = adminTabID;
@@ -434,7 +458,7 @@ namespace Satrabel.HttpModules.Config
 #endif
                     newTab.TabID = new TabController().AddTab(newTab, false);
                     tabID = newTab.TabID;
-                    
+
 
                 }
             }
@@ -461,10 +485,10 @@ namespace Satrabel.HttpModules.Config
                 objModule.IconFile = "~/Icons/Sigma/AdvancedUrlMngmt_16x16.png";
 #else
                 objModule.IconFile = "~/Images/icon_search_32px.gif";
-#endif                
+#endif
                 moduleCtl.AddModule(objModule);
-            }     
+            }
         }
- 
+
     }
 }
