@@ -108,12 +108,11 @@ namespace Satrabel.SitemapProviders
                                 var rules = UrlRuleConfiguration.GetConfig(portalId).Rules;
                                 foreach (var rule in rules.Where(r => r.RuleType == UrlRuleType.Module && r.Action == UrlRuleAction.Rewrite && r.TabId == objTab.TabID && r.InSitemap == true))
                                 {
-                                    string[] pars = rule.Parameters.Split('&');
-                                    pageUrl = GetPageUrl(objTab, MultiLanguage ? loc.Code : null, pars);
-
-                                    if (objTab.IsNeutralCulture)
+                                    if (rule.CultureCode == null || rule.CultureCode == loc.Code)
                                     {
-                                        pageUrl.Alternates.AddRange(GetAlternates(objTab.TabID, pars));
+                                        string[] pars = rule.Parameters.Split('&');
+                                        pageUrl = GetPageUrl(objTab, MultiLanguage ? loc.Code : null, pars);
+                                        pageUrl.Alternates.AddRange(GetAlternates(objTab.TabID, pars));                                            
                                         urls.Add(pageUrl);
                                     }
                                 }

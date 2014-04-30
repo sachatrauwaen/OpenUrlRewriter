@@ -69,7 +69,7 @@
         <asp:BoundField DataField="RedirectStatus" HeaderText="Status" SortExpression="RedirectStatus" >
             <HeaderStyle HorizontalAlign="Left" />
         </asp:BoundField>
-
+       
     
     </Columns>
     
