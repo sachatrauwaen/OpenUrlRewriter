@@ -584,8 +584,8 @@ namespace Satrabel.Services.Url.FriendlyUrl
             return friendlyPath;
         }
 
-        static string internPatern = "agentType=View&PropertyID=[id]";
-        static string externPatern = "PropertyID-[id]";
+        //static string internPatern = "agentType=View&PropertyID=[id]";
+        //static string externPatern = "PropertyID-[id]";
 
         private string GetFriendlyQueryString(TabInfo tab, string path, string pageName, int CurrentPortalId)
         {
