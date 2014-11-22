@@ -42,10 +42,10 @@ namespace Satrabel.HttpModules.Provider
 {
     public class UrlBuilder
     {
-        
-        
+        DnnLogger logger = DnnLogger.GetClassLogger(typeof(UrlRuleConfiguration));
+
         public UrlBuilder()
-        {            
+        {
             LoadProviders();
         }
 
@@ -63,27 +63,32 @@ namespace Satrabel.HttpModules.Provider
                 {
                     isProviderEnabled = _provider.HostProvider;
                 }
-                else 
-                { 
-                    isProviderEnabled = bool.Parse(PortalController.GetPortalSetting(_provider.Name + "_Enabled", PortalId, "True"));                
+                else
+                {
+                    isProviderEnabled = bool.Parse(PortalController.GetPortalSetting(_provider.Name + "_Enabled", PortalId, "True"));
                 }
-                if (isProviderEnabled )
+                if (isProviderEnabled)
                 {
                     // Get all urls from provider
-                    List<UrlRule> urls = _provider.GetRules(PortalId);
-                    if (urls != null)
+                    try
                     {
-                        foreach (UrlRule url in urls)
+                        List<UrlRule> urls = _provider.GetRules(PortalId);
+                        if (urls != null)
                         {
-                            allUrls.Add(url);
+                            foreach (UrlRule url in urls)
+                            {
+                                allUrls.Add(url);
+                            }
+                        }
+                        else
+                        {                            
+                            logger.Error("No urls for PortalId " + PortalId);
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        DnnLogger logger = DnnLogger.GetClassLogger(typeof(UrlRuleConfiguration));
-                        logger.Error("No urls for PortalId " + PortalId);
+                        logger.Error("Error on generating rules for " + _provider.Name, ex);
                     }
-
                 }
             }
             return allUrls;
@@ -92,7 +97,7 @@ namespace Satrabel.HttpModules.Provider
         public string[] BuildCacheKeys()
         {
             var allCacheKeys = new List<string>();
-            
+
             foreach (UrlRuleProvider _provider in Providers)
             {
                 bool isProviderEnabled = true; //bool.Parse(PortalController.GetPortalSetting(_provider.Name + "_Enabled", PortalId, "True"));
@@ -132,7 +137,7 @@ namespace Satrabel.HttpModules.Provider
             }
             return allCacheKeys.ToArray();
         }
-        
+
 
         #endregion
 
@@ -169,8 +174,8 @@ namespace Satrabel.HttpModules.Provider
                         //comp.Value.Name = comp.Key;
                         //comp.Value.Description = comp.Value.Description;
                         _providers.Add(comp.Value);
-                                                
-                        
+
+
                     }
                     //'ProvidersHelper.InstantiateProviders(section.Providers, _providers, GetType(SiteMapProvider))
                 }

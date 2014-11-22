@@ -112,7 +112,8 @@ namespace Satrabel.SitemapProviders
                                     {
                                         string[] pars = rule.Parameters.Split('&');
                                         pageUrl = GetPageUrl(objTab, MultiLanguage ? loc.Code : null, pars);
-                                        pageUrl.Alternates.AddRange(GetAlternates(objTab.TabID, pars));                                            
+                                        // if module support ML
+                                        //pageUrl.Alternates.AddRange(GetAlternates(objTab.TabID, pars));                                            
                                         urls.Add(pageUrl);
                                     }
                                 }
@@ -147,7 +148,7 @@ namespace Satrabel.SitemapProviders
                         };
                                                
                         
-                        if (CanViewPage)
+                        if (CanViewPage && !string.IsNullOrEmpty(alt.Href))
                         {
                             alternates.Add(alt);
                         }
@@ -173,14 +174,10 @@ namespace Satrabel.SitemapProviders
         private string newUrl(int tabId, string newLanguage, out bool CanViewPage, params string[] AdditionalParameters)
         {
             CanViewPage = true;
-            string Url;
-            
+            string Url = "";
             Locale newLocale = LocaleController.Instance.GetLocale(newLanguage);
-
             //Ensure that the current ActiveTab is the culture of the new language
-            
             bool islocalized = false;
-
             TabInfo localizedTab = new TabController().GetTabByCulture(tabId, ps.PortalId, newLocale);
             if (localizedTab != null)
             {
@@ -190,11 +187,9 @@ namespace Satrabel.SitemapProviders
                 {
                     CanViewPage = false;
                 }
-                
+                Url = Globals.NavigateURL(localizedTab.TabID, localizedTab.IsSuperTab, ps, "", newLanguage, AdditionalParameters);    
             }
-
-            Url = Globals.NavigateURL(localizedTab.TabID, localizedTab.IsSuperTab, ps, "", newLanguage, AdditionalParameters);
-
+            /*
             if (Url.ToLower().IndexOf(ps.PortalAlias.HTTPAlias.ToLower()) == -1)
             {
                 // code to fix a bug in dnn5.1.2 for navigateurl
@@ -208,7 +203,7 @@ namespace Satrabel.SitemapProviders
                     Url = Globals.AddHTTP(ps.PortalAlias.HTTPAlias.ToLower()) + Url;
                 }
             }
-
+            */
             return Url;
             
         }

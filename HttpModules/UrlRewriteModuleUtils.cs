@@ -34,8 +34,8 @@ namespace Satrabel.HttpModules
         {
             HttpRequest request = app.Request;
             HttpResponse response = app.Response;
-            
-            RewriteUrl(app, request.Url, out portalAlias,  out objPortalAlias, out action,
+
+            RewriteUrl(app, request.Url, out portalAlias, out objPortalAlias, out action,
                         request.ApplicationPath, request.IsSecureConnection, request.HttpMethod, request.RawUrl, request.PhysicalPath);
 
         }
@@ -47,7 +47,7 @@ namespace Satrabel.HttpModules
         }
 
         #endregion
-        private static void RewriteUrl(HttpApplication app, Uri url, out string portalAlias, out PortalAliasInfo objPortalAlias, out RewriterAction action, 
+        private static void RewriteUrl(HttpApplication app, Uri url, out string portalAlias, out PortalAliasInfo objPortalAlias, out RewriterAction action,
             string applicationPath, bool isSecureConnection, string httpMethod, string rawUrl, string PhysicalPath)
         {
             /*
@@ -85,12 +85,9 @@ namespace Satrabel.HttpModules
             portalAlias = "";
             //determine portal alias looking for longest possible match
             objPortalAlias = GetPortalAlias(url, out portalAlias);
-            
-
-
-
             // action is the object containing all info about rewiting and redirection
             action = new RewriterAction();
+            if (objPortalAlias == null) return;
             action.LocalPath = url.LocalPath;
             action.HostPort = GetHostPort(url, isSecureConnection);
             action.OriginalUrl = action.HostPort + action.LocalPath;
@@ -188,57 +185,80 @@ namespace Satrabel.HttpModules
                         ProcessRedirect(app, httpMethod, url, action);
                         return;
                     }
-
 #if DNN71
                     else if (!string.IsNullOrEmpty(objPortalAlias.CultureCode))
                     {
-                        var primaryAliases = DotNetNuke.Entities.Portals.Internal.TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(objPortalAlias.PortalID).ToList();
+                        var primaryAliases = DotNetNuke.Entities.Portals.Internal.TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(objPortalAlias.PortalID).ToList().Where(a => a.IsPrimary == true);
                         var alias = primaryAliases.FirstOrDefault(a => string.IsNullOrEmpty(a.CultureCode));
                         if (alias != null)
                         {
                             action.Alias = alias.HTTPAlias;
+                            action.DoRedirect = true;
+                            action.Raison += "+Remove language";
+                            action.RedirectHomePage = true;
+                            ProcessRedirect(app, httpMethod, url, action);
+                            return;
                         }
-                        action.DoRedirect = true;
-                        action.Raison += "+Remove language";
-                        action.RedirectHomePage = true;
-                        ProcessRedirect(app, httpMethod, url, action);
-                        return;
-                    }
-
-#endif
-                    else
-                    {
-                        PortalController pc = new PortalController();
+                        // for url www.mysite.com/nl : redirect to www.mysite.com/nl/home
                         Locale DefaultLocale = LocaleController.Instance.GetDefaultLocale(portalID);
-                        string ActiveLanguage = PortalController.GetActivePortalLanguage(portalID);
-                        if (ActiveLanguage != DefaultLocale.Code) // Browser language detection 
+                        if (!string.IsNullOrEmpty(objPortalAlias.CultureCode) && (objPortalAlias.CultureCode != DefaultLocale.Code))
                         {
-                            PortalInfo objPortal = pc.GetPortal(portalID, ActiveLanguage);
+                            PortalController pc = new PortalController();
+
+                            PortalInfo objPortal = pc.GetPortal(portalID, objPortalAlias.CultureCode);
                             if (objPortal.HomeTabId > 0)
                             {
                                 var portalSettings = new PortalSettings(objPortal.HomeTabId, objPortalAlias);
-
                                 app.Context.Items.Add("UrlRewrite:OriginalUrl", app.Request.Url.AbsoluteUri);
-                                string HomeUrl = Globals.NavigateURL(objPortal.HomeTabId, false, portalSettings, "", ActiveLanguage);
+                                string HomeUrl = Globals.NavigateURL(objPortal.HomeTabId, false, portalSettings, "", objPortalAlias.CultureCode);
                                 app.Context.Items.Remove("UrlRewrite:OriginalUrl");
                                 action.DoRedirect = true;
-                                action.Raison += "+Active language";
-                                action.Status = 302;
+                                action.Raison += "+Home page missing";
+                                action.Status = 301;
                                 action.RedirectHomePage = true;
                                 action.RedirectUrl = HomeUrl;
                                 return;
                             }
                         }
-                        
+
+                    }
+
+#endif
+                    {
+                        PortalController pc = new PortalController();
+                        Locale DefaultLocale = LocaleController.Instance.GetDefaultLocale(portalID);
+                        // Browser language detection 
+                        if (HttpContext.Current.Request["language"] == null && EnableBrowserLanguageInDefault(portalID))
+                        {
+                            string ActiveLanguage = PortalController.GetActivePortalLanguage(portalID);
+                            if (ActiveLanguage != DefaultLocale.Code)
+                            {
+                                PortalInfo objPortal = pc.GetPortal(portalID, ActiveLanguage);
+                                if (objPortal.HomeTabId > 0)
+                                {
+                                    var portalSettings = new PortalSettings(objPortal.HomeTabId, objPortalAlias);
+
+                                    app.Context.Items.Add("UrlRewrite:OriginalUrl", app.Request.Url.AbsoluteUri);
+                                    string HomeUrl = Globals.NavigateURL(objPortal.HomeTabId, false, portalSettings, "", ActiveLanguage);
+                                    app.Context.Items.Remove("UrlRewrite:OriginalUrl");
+                                    action.DoRedirect = true;
+                                    action.Raison += "+Active language";
+                                    action.Status = 302;
+                                    action.RedirectHomePage = true;
+                                    action.RedirectUrl = HomeUrl;
+                                    return;
+                                }
+                            }
+                        }
                         {
                             PortalInfo objPortal = pc.GetPortal(portalID, DefaultLocale.Code);
+
 
                             string sendToUrl = "~/" + Globals.glbDefaultPage + "?TabID=" + objPortal.HomeTabId;
                             if (dicLocales.Count > 1)
                             {
                                 sendToUrl = sendToUrl + "&language=" + objPortal.DefaultLanguage;
                             }
-
                             if (!string.IsNullOrEmpty(action.QueryUrl))
                             {
                                 sendToUrl = sendToUrl + "&" + action.QueryUrl.TrimStart('?', '&');
@@ -253,25 +273,25 @@ namespace Satrabel.HttpModules
                             return;
                         }
                     }
-                }
-                
 #if DNN71
-                if (action.WorkUrl == "" && !string.IsNullOrEmpty(action.CultureCode))
-                {
-
-                    PortalInfo objPortal = new PortalController().GetPortal(portalID, action.CultureCode);
-                    string sendToUrl = "~/" + Globals.glbDefaultPage + "?TabID=" + objPortal.HomeTabId;
-                    sendToUrl = sendToUrl + "&language=" + action.CultureCode;
-                    if (app != null)
+                    if (!string.IsNullOrEmpty(action.CultureCode))
                     {
-                        app.Context.Items.Add("UrlRewrite:RewriteUrl", RewriterUtils.ResolveUrl(applicationPath, sendToUrl));
+
+                        PortalInfo objPortal = new PortalController().GetPortal(portalID, action.CultureCode);
+                        string sendToUrl = "~/" + Globals.glbDefaultPage + "?TabID=" + objPortal.HomeTabId;
+                        sendToUrl = sendToUrl + "&language=" + action.CultureCode;
+                        if (app != null)
+                        {
+                            app.Context.Items.Add("UrlRewrite:RewriteUrl", RewriterUtils.ResolveUrl(applicationPath, sendToUrl));
+                        }
+                        action.DoReWrite = true;
+                        action.RewriteUrl = sendToUrl;
+                        return;
                     }
-                    action.DoReWrite = true;
-                    action.RewriteUrl = sendToUrl;
-                    return;
-                }
 #endif
+                }
                 #endregion
+
 #if !DNN71                
                 // Find culture                
                 GetCulture(cacheCtrl, dicLocales, action, portalID);
@@ -435,6 +455,30 @@ namespace Satrabel.HttpModules
 
         }
 
+        private static bool EnableBrowserLanguageInDefault(int portalId)
+        {
+            bool retValue = Null.NullBoolean;
+            try
+            {
+                var setting = Null.NullString;
+                PortalController.GetPortalSettingsDictionary(portalId).TryGetValue("EnableBrowserLanguage", out setting);
+                if (string.IsNullOrEmpty(setting))
+                {
+                    retValue = DotNetNuke.Entities.Host.Host.EnableBrowserLanguage;
+                }
+                else
+                {
+                    retValue = (setting.StartsWith("Y", StringComparison.InvariantCultureIgnoreCase) || setting.ToUpperInvariant() == "TRUE");
+                }
+            }
+            catch (Exception exc)
+            {
+                // Logger.Error(exc);
+            }
+            return retValue;
+        }
+
+
         private static bool IsSpecialPage(Uri Url, string PhysicalPath, string RawUrl, string WorkUrl)
         {
             if (
@@ -454,22 +498,22 @@ namespace Satrabel.HttpModules
                || Url.LocalPath.ToLower().EndsWith(".svc")
                ) return true;
 
-                /*
-                if ( !string.IsNullOrEmpty(PhysicalPath) && Directory.Exists(PhysicalPath) )
-                {
-                    return true;
-                }
-                */
-                if (WorkUrl.ToLower().StartsWith("/desktopmodules/"))
-                {
-                    return true;
-                }
-                //if (Url.LocalPath.ToLower().EndsWith(".aspx") && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
+            /*
+            if ( !string.IsNullOrEmpty(PhysicalPath) && Directory.Exists(PhysicalPath) )
+            {
+                return true;
+            }
+            */
+            if (WorkUrl.ToLower().StartsWith("/desktopmodules/"))
+            {
+                return true;
+            }
+            //if (Url.LocalPath.ToLower().EndsWith(".aspx") && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
 
-                if ((Directory.Exists(PhysicalPath) || File.Exists(PhysicalPath)) && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
-                {
-                    return true;
-                }
+            if ((Directory.Exists(PhysicalPath) || File.Exists(PhysicalPath)) && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
+            {
+                return true;
+            }
             return false;
         }
 
@@ -535,6 +579,7 @@ namespace Satrabel.HttpModules
                 //if there is a match
                 if (objMatch.Success)
                 {
+
                     action.TabId = int.Parse(objMatch.Groups[1].Value);
                     // if there is a rule for the tabid, the OpenUrlRewriter manage the rewriter otherwise the SiteUrls rules discard all processing
                     var rule = cacheCtrl.GetRewriteTabRule(action.CultureCode, action.TabId);
@@ -575,12 +620,28 @@ namespace Satrabel.HttpModules
                             action.WorkUrl = RewriterUtils.ResolveUrl(ApplicationPath, "~" + langParms + "/" + rule.Url);
                         }
                         //action.RedirectUrl = action.HostPort + action.LocalPath;
+
                         action.DoRedirect = true;
                         action.Raison += "+tabid present";
                         action.RedirectPage = rule.Url;
                         RuleMatch = true;
+
                     }
+
                     //  ~/Default.aspx?TabId=$1                
+                }
+            }
+            else if (cacheCtrl != null && action.QueryUrl.ToLower().Contains("tabid") && action.QueryUrl.ToLower().Contains("passwordreset")) // for performance
+            {
+            
+                string pattern = "^" + RewriterUtils.ResolveUrl(ApplicationPath, "[?&]TabId=(\\d+)(.*)") + "$";
+                Match objMatch = Regex.Match(action.QueryUrl, pattern, RegexOptions.IgnoreCase);
+                //if there is a match
+                if (objMatch.Success)
+                {
+                   
+                        action.QueryUrl = Regex.Replace(action.QueryUrl, pattern, "$2", RegexOptions.IgnoreCase);
+                   
                 }
             }
 
@@ -657,7 +718,7 @@ namespace Satrabel.HttpModules
                     }
 
                     RedirectTo += UrlRewiterSettings.Current().FileExtension;
-                    redirect.QueryUrl= redirect.QueryUrl.TrimStart('?', '&');
+                    redirect.QueryUrl = redirect.QueryUrl.TrimStart('?', '&');
                     if (!string.IsNullOrEmpty(redirect.QueryUrl))
                         RedirectTo += (RedirectTo.Contains('?') ? "&" : "?") + redirect.QueryUrl;
                 }
@@ -1262,7 +1323,7 @@ namespace Satrabel.HttpModules
         {
             PortalAliasInfo objPortalAlias = null;
             //string myAlias = Globals.GetDomainName(app.Request, true);
-            
+
 #if DNN71
             string myAlias = TestableGlobals.Instance.GetDomainName(url, true);
 #else
@@ -1300,8 +1361,9 @@ namespace Satrabel.HttpModules
                 //split the value into an array based on "/" ( ie. /tabid/##/ )
                 string parameters = action.ModuleUrl.Replace("\\", "/").TrimStart('/');
                 var rule = cacheCtrl.GetModuleRule(action.CultureCode, action.TabId, parameters);
-                
-                if (rule == null) {
+
+                if (rule == null)
+                {
                     rule = cacheCtrl.GetCustomModuleRule(action.CultureCode, action.TabId, parameters);
                     if (rule != null)
                     {
@@ -1323,7 +1385,7 @@ namespace Satrabel.HttpModules
                         return;
                     }
                 }
-                
+
                 if (rule != null)
                 {
                     if (rule.Action == UrlRuleAction.Redirect)
@@ -1436,7 +1498,7 @@ namespace Satrabel.HttpModules
                 rule = cacheCtrl.GetCustomModuleRuleByParameters(action.CultureCode, action.TabId, parameters);
                 if (rule != null)
                 {
-                    
+
                     if (rule.RemoveTab)
                     {
                         action.RedirectPage = "";

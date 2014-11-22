@@ -154,15 +154,14 @@ namespace Satrabel.HttpModules
                 app.Response.End();
             } else if (action.DoRedirect) {
                 app.Context.Items.Add("UrlRewrite:RedirectUrl", action.RedirectUrl);
-
+                app.Response.AppendHeader("X-Redirect-Reason", action.Raison);
                 if (action.Status == 302)
-                {
+                {                    
                     app.Response.Redirect(action.RedirectUrl, true);
                 }
                 else
                 {
-                    app.Response.Status = "301 Moved Permanently";
-                    app.Response.AppendHeader("X-Redirect-Reason", action.Raison);
+                    app.Response.Status = "301 Moved Permanently";                    
                     app.Response.AddHeader("Location", action.RedirectUrl);
                     app.Response.End();
                 }
@@ -313,6 +312,7 @@ namespace Satrabel.HttpModules
                         if (childAlias.IndexOf(domainName, StringComparison.OrdinalIgnoreCase) == -1)
                         {
                             //redirect to the url defined in the alias
+                            app.Response.AppendHeader("X-Redirect-Reason", "alias parameter");
                             response.Redirect(Globals.GetPortalDomainName(childAlias, request, true), true);
                         }
                         else //the alias is the same as the current domain
@@ -357,6 +357,7 @@ namespace Satrabel.HttpModules
                                 {
                                     strURL += app.Request.Url.PathAndQuery;
                                 }
+                                app.Response.AppendHeader("X-Redirect-Reason", "not correct domain");
                                 response.Redirect(strURL, true);
                             }
                         }
@@ -398,7 +399,7 @@ namespace Satrabel.HttpModules
                             portalAliasInfo.PortalID = portalId;
                             portalAliasInfo.HTTPAlias = portalAlias;
                             portalAliasController.AddPortalAlias(portalAliasInfo);
-
+                            app.Response.AppendHeader("X-Redirect-Reason", "auto add portalalis");
                             response.Redirect(app.Request.Url.ToString(), true);
                         }
                     }
@@ -451,7 +452,7 @@ namespace Satrabel.HttpModules
                     {
                         redirectUrl = redirectAlias + redirectUrl.Substring(checkAlias.Length);
                     }
-
+                    app.Response.AppendHeader("X-Redirect-Reason", "alias redirect");
                     response.AppendHeader("Location", redirectUrl);
                 }
 
@@ -461,9 +462,11 @@ namespace Satrabel.HttpModules
                 {
 					//Target Url
                     var redirectUrl = portalSettings.ActiveTab.FullUrl;
+                    app.Response.AppendHeader("X-Redirect-Reason", "page url redirect");
                     if (portalSettings.ActiveTab.PermanentRedirect)
                     {
 						//Permanently Redirect
+                        
                         response.StatusCode = 301;
                         response.AppendHeader("Location", redirectUrl);
                     }
@@ -511,6 +514,7 @@ namespace Satrabel.HttpModules
                         if (strURL.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase))
                         {
 							//redirect to secure connection
+                            app.Response.AppendHeader("X-Redirect-Reason", "redirect to secure");
                             response.Redirect(strURL, true);
                         }
                         else //when switching to an unsecure page, use a clientside redirector to avoid the browser security warning

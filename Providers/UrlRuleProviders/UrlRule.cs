@@ -73,7 +73,7 @@ namespace Satrabel.HttpModules.Provider
 
 
         private static string GenerateRegExp(string patern) {
-            return "^" + patern.Replace("[", "(?'").Replace("]", "'.*)").Replace("{", "(?'").Replace("}", "'\\d*)") + "$";
+            return "^" + patern.Replace("+", "\\+").Replace("[", "(?'").Replace("]", "'.*)").Replace("{", "(?'").Replace("}", "'\\d*)") + "$";
         }
 
         public bool IsMatch(string ModuleQueryString)

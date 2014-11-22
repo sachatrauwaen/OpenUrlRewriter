@@ -182,13 +182,12 @@ namespace Satrabel.Services.Url.FriendlyUrl
                 }
                 if (!string.IsNullOrEmpty(CultureCode))
                 {
-                    var primaryAliases = DotNetNuke.Entities.Portals.Internal.TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(PortalId).ToList();
-                    var alias = primaryAliases.FirstOrDefault(a => a.CultureCode == CultureCode);
+                    var primaryAliases = DotNetNuke.Entities.Portals.Internal.TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(PortalId).ToList().Where(a => a.IsPrimary == true);
+                    var alias = primaryAliases.FirstOrDefault(a => string.Equals(a.CultureCode, CultureCode, StringComparison.InvariantCultureIgnoreCase) );
                     if (alias != null) {
                         portalAlias = alias.HTTPAlias;
-                    }
-
-                    
+                        DefaultPortalAlias = portalAlias;
+                    }                    
                     var DefaultAlias = primaryAliases.FirstOrDefault(a => string.IsNullOrEmpty(a.CultureCode));
                     if (DefaultAlias != null)
                     {
