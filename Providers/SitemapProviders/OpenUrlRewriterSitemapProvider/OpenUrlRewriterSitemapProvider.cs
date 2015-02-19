@@ -93,7 +93,7 @@ namespace Satrabel.SitemapProviders
                         }
                         if (!objTab.IsDeleted && !objTab.DisableLink && objTab.TabType == TabType.Normal && (Null.IsNull(objTab.StartDate) || objTab.StartDate < DateTime.Now) &&
                             (Null.IsNull(objTab.EndDate) || objTab.EndDate > DateTime.Now) && IsTabPublic(objTab.TabPermissions) &&
-                            objTab.TabID != objPortal.SearchTabId && objTab.TabID != objPortal.UserTabId && objTab.ParentId != objPortal.UserTabId && objTab.TabID != objPortal.LoginTabId && objTab.TabID != objPortal.RegisterTabId)
+                            objTab.TabID != objPortal.SearchTabId && objTab.TabID != objPortal.UserTabId && (objPortal.UserTabId == Null.NullInteger || objTab.ParentId != objPortal.UserTabId) && objTab.TabID != objPortal.LoginTabId && objTab.TabID != objPortal.RegisterTabId)
                         {
                             var allowIndex = true; 
                             if ( (!objTab.TabSettings.ContainsKey("AllowIndex") || !bool.TryParse(objTab.TabSettings["AllowIndex"].ToString(), out allowIndex) || allowIndex ) &&

@@ -208,6 +208,7 @@ namespace Satrabel.HttpModules
                 || request.Url.LocalPath.ToLower().Contains("captcha.aspx")
                 || request.Url.LocalPath.ToLower().Contains("scriptresource.axd")
                 || request.Url.LocalPath.ToLower().Contains("webresource.axd")
+                || request.Url.LocalPath.ToLower().Contains("dmxdav.axd")
                 )
             {
                 return;
