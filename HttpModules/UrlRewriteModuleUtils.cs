@@ -510,7 +510,7 @@ namespace Satrabel.HttpModules
             }
             //if (Url.LocalPath.ToLower().EndsWith(".aspx") && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
 
-            if ((Directory.Exists(PhysicalPath) || File.Exists(PhysicalPath)) && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
+            if (File.Exists(PhysicalPath) && !Url.LocalPath.ToLower().EndsWith(Globals.glbDefaultPage.ToLower()))
             {
                 return true;
             }
