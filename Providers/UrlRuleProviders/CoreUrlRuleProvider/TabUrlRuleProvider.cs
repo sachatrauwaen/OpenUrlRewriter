@@ -17,26 +17,28 @@ using DotNetNuke.Framework.Providers;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Cache;
+using DotNetNuke.Common;
 
 namespace Satrabel.HttpModules.Provider
 {
-    
+
     public class TabUrlRuleProvider : UrlRuleProvider
     {
 
-        
+
         private const string ProviderName = "tabUrlRuleProvider";
         private readonly bool UseKeyWordsDefault;
 
-        public TabUrlRuleProvider() {            
-            UseKeyWordsDefault = GetProviderSettingAsBoolean("tabUrlRuleProvider", "useKeyWords", false);            
+        public TabUrlRuleProvider()
+        {
+            UseKeyWordsDefault = GetProviderSettingAsBoolean("tabUrlRuleProvider", "useKeyWords", false);
             Settings = new UrlRuleSetting[] { 
                 new UrlRuleSetting("UseKeyWords", UseKeyWordsDefault), 
                 new UrlRuleSetting("RemoveHomePage", false),
                 //new UrlRuleSetting("CacheDependency", true) 
             };
             HelpUrl = "https://openurlrewriter.codeplex.com/wikipage?title=TabProvider";
-            HostProvider = true;            
+            HostProvider = true;
         }
 
         public override List<UrlRule> GetRules(int PortalId)
@@ -57,12 +59,13 @@ namespace Satrabel.HttpModules.Provider
             var tabs = tc.GetTabsByPortal(PortalId).Values;
             foreach (TabInfo tab in tabs)
             {
-                if ( /*tab.PortalID > -1 && !tab.TabPath.StartsWith(@"//Admin//") && tab.TabPath != @"//Admin" &&*/  !tab.DisableLink && tab.TabType == TabType.Normal && !tab.IsDeleted )
+                if ( /*tab.PortalID > -1 && !tab.TabPath.StartsWith(@"//Admin//") && tab.TabPath != @"//Admin" &&*/  !tab.DisableLink /*&& tab.TabType == TabType.Normal*/ && !tab.IsDeleted)
                 {
 
                     bool RemoveTab = RemoveHomePage && tab.TabID == DefaultHomeTabId;
-                    bool MLNeutralHomeTab = LocaleController.Instance.GetLocales(PortalId).Count > 1 && 
+                    bool MLNeutralHomeTab = LocaleController.Instance.GetLocales(PortalId).Count > 1 &&
                             tab.TabID == DefaultHomeTabId && string.IsNullOrEmpty(tab.CultureCode);
+
 
 
                     var rule = new UrlRule
@@ -70,17 +73,17 @@ namespace Satrabel.HttpModules.Provider
                         RuleType = UrlRuleType.Tab,
                         CultureCode = tab.CultureCode,
                         TabId = tab.TabID,
-                        Parameters = "tabid="+ tab.TabID.ToString(),
+                        Parameters = "tabid=" + tab.TabID.ToString(),
                         Action = UrlRuleAction.Rewrite,
-                        Url =  CleanupUrl(GetTabUrl(tab, useKeyWords)),
+                        Url = CleanupUrl(GetTabUrl(tab, useKeyWords)),
                         RemoveTab = RemoveTab && !MLNeutralHomeTab
                     };
-                                        
+
                     TabInfo parentTab = tab;
-                    while (parentTab.ParentId != Null.NullInteger )
+                    while (parentTab.ParentId != Null.NullInteger)
                     {
                         parentTab = tc.GetTab(parentTab.ParentId, PortalId, false);
-                        rule.Url = CleanupUrl(GetTabUrl(parentTab, useKeyWords)) + "/" + rule.Url;                        
+                        rule.Url = CleanupUrl(GetTabUrl(parentTab, useKeyWords)) + "/" + rule.Url;
                     }
 #if DNN71
                     var tabUrl = tab.TabUrls.SingleOrDefault(t =>  /*t.IsSystem
@@ -91,7 +94,32 @@ namespace Satrabel.HttpModules.Provider
                         rule.Url = tabUrl.Url.Trim('/');
                     }
 #endif
-                    Rules.Add(rule);                                                                                
+
+                    if (tab.TabType != TabType.Normal)
+                    {
+                        string redirUrl = "";
+                        switch (tab.TabType)
+                        {
+                            case TabType.Tab:
+                                //Get the tab being linked to
+                                TabInfo tempTab = new TabController().GetTab(Int32.Parse(tab.Url), tab.PortalID, false);
+                                redirUrl = tempTab.TabPath.Replace("//", "/").Substring(1);
+                                break;
+                            case TabType.File:
+                                //var file = FileManager.Instance.GetFile(Int32.Parse(tab.Url.Substring(7)));
+                                //tabUrl = file.RelativePath;
+                                break;
+                            case TabType.Url:
+                                redirUrl = tab.Url;
+                                break;
+                        }
+                        rule.Action = UrlRuleAction.Redirect;
+                        rule.RedirectStatus = tab.PermanentRedirect ? 301 : 302;
+                        rule.RedirectDestination = redirUrl;
+                    }
+
+
+                    Rules.Add(rule);
                     var ruleRedirect = new UrlRule
                     {
                         RuleType = UrlRuleType.Tab,
@@ -105,12 +133,12 @@ namespace Satrabel.HttpModules.Provider
                     };
                     if (rule.Url != ruleRedirect.Url)
                     {
-                        Rules.Add(ruleRedirect);  
+                        Rules.Add(ruleRedirect);
                     }
 
                     // if RemoveTab for multi-language and neutral home page
                     // add a culture specific rewrite
-                    if (RemoveTab && MLNeutralHomeTab) 
+                    if (RemoveTab && MLNeutralHomeTab)
                     {
                         var ruleNeutral = new UrlRule
                         {
@@ -121,7 +149,7 @@ namespace Satrabel.HttpModules.Provider
                             Action = UrlRuleAction.Rewrite,
                             Url = rule.Url,
                             RemoveTab = true
-                        };                        
+                        };
                         Rules.Add(ruleNeutral);
                         var ruleRedirectNeutral = new UrlRule
                         {
@@ -146,13 +174,14 @@ namespace Satrabel.HttpModules.Provider
         }
 
         protected string GetTabUrl(TabInfo tab, bool useKeyWords)
-        {            
+        {
             if (useKeyWords && tab.KeyWords != "")
             {
-                string[] keys = tab.KeyWords.Trim().Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                if (keys.Length > 0 && keys[0].Trim() != ""){
+                string[] keys = tab.KeyWords.Trim().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (keys.Length > 0 && keys[0].Trim() != "")
+                {
                     return keys[0].Trim();
-                }            
+                }
             }
 
 
@@ -161,14 +190,14 @@ namespace Satrabel.HttpModules.Provider
 
         public override string[] GetCacheKeys(int PortalId)
         {
-            var CacheKeys = new List<string>();            
+            var CacheKeys = new List<string>();
             string cacheKey = string.Format(DataCache.TabCacheKey, PortalId);
-            CacheKeys.Add(cacheKey);            
+            CacheKeys.Add(cacheKey);
 
 #if DNN71
-            cacheKey = string.Format(DataCache.TabUrlCacheKey, PortalId);                
-            CacheKeys.Add(cacheKey);                
-#endif            
+            cacheKey = string.Format(DataCache.TabUrlCacheKey, PortalId);
+            CacheKeys.Add(cacheKey);
+#endif
             return CacheKeys.ToArray();
         }
 
