@@ -722,6 +722,9 @@ namespace Satrabel.HttpModules
                     if (!string.IsNullOrEmpty(redirect.QueryUrl))
                         RedirectTo += (RedirectTo.Contains('?') ? "&" : "?") + redirect.QueryUrl;
                 }
+                redirect.QueryUrl = redirect.QueryUrl.TrimStart('?', '&');
+                if (!string.IsNullOrEmpty(redirect.QueryUrl))
+                    RedirectTo += (RedirectTo.Contains('?') ? "&" : "?") + redirect.QueryUrl;
                 redirect.RedirectUrl = RedirectTo;
                 /*
                 response.AppendHeader("X-Redirect-Raison", redirect.Raison);
