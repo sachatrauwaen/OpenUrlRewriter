@@ -38,9 +38,17 @@ namespace Satrabel.OpenUrlRewriter.Components
         {
             
             string cacheKey = String.Format(UrlRuleConfigCacheKey, _portalId);                        
-            return CBO.GetCachedObject<UrlRuleConfiguration>(
-                new CacheItemArgs(cacheKey, DataCache.TabCacheTimeOut, DataCache.TabCachePriority, _portalId), 
-                GetUrlRuleConfigCallBack);           
+            var config =  CBO.GetCachedObject<UrlRuleConfiguration>(
+                            new CacheItemArgs(cacheKey, DataCache.TabCacheTimeOut, DataCache.TabCachePriority, _portalId), 
+                            GetUrlRuleConfigCallBack);
+
+            if (config.Rules.Count == 0)
+            {
+                Logger.Info("Rules.Count = 0 -> ClearCache");
+                DataCache.ClearCache(cacheKey);
+            }
+
+            return config;
         }
 
         private object GetUrlRuleConfigCallBack(CacheItemArgs cacheItemArgs)
