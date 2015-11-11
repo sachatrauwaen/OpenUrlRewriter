@@ -89,16 +89,16 @@ namespace Satrabel.HttpModules.Provider
             string ch = ""; int i = 0; int last = Url.ToCharArray().GetUpperBound(0);
             foreach (char c in Url.ToCharArray())
             {
-
+                
                 //use string for manipulation
                 ch = c.ToString();
                 if (ch == " ")
                 {
                     ch = replaceWith;
                 }
-                else if (@".[]|:;`%\\""".Contains(ch))
+                else if (@".[]|:;`%\\""^{}№".Contains(ch))
                     ch = "";
-                else if (@" &$+,/=?@~#<>()¿¡«»!'’–".Contains(ch))
+                else if (@" &$+,/=?@~#<>()¿¡«»!'’–*".Contains(ch))
                     ch = replaceWith;
                 else
                 {
