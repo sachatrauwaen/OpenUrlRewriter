@@ -26,6 +26,7 @@ using System.Web;
 
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
+using DotNetNuke.Entities.Host;
 
 #endregion
 
@@ -43,9 +44,11 @@ namespace Satrabel.HttpModules
 
         internal static void RewriteUrl(HttpContext context, string sendToUrl, ref string sendToUrlLessQString, ref string filePath)
         {
-            string debugMsg = "{0}, {1}";
-            context.Response.AppendHeader("X-OpenUrlRewriter-Debug", string.Format(debugMsg, context.Request.RawUrl, sendToUrl));
-
+            if (Host.DebugMode)
+            {
+                string debugMsg = "{0}, {1}";
+                context.Response.AppendHeader("X-OpenUrlRewriter-Debug", string.Format(debugMsg, context.Request.RawUrl, sendToUrl));
+            }
             //System.Diagnostics.Debug.WriteLine(context.Request.RawUrl);
 
             //first strip the querystring, if any

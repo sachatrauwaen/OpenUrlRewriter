@@ -44,10 +44,11 @@ namespace Satrabel.OpenUrlRewriter.Components
 
             if (config.Rules.Count == 0)
             {
-                Logger.Info("Rules.Count = 0 -> ClearCache");
+                #if DEBUG
+                Logger.Info("Rules.Count = 0 -> ClearCache " + cacheKey);
+                #endif
                 DataCache.ClearCache(cacheKey);
             }
-
             return config;
         }
 

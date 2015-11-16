@@ -18,6 +18,7 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Entities.Urls.Config;
 using DotNetNuke.Common.Internal;
 using System.IO;
+using DotNetNuke.Entities.Host;
 #else
 using DotNetNuke.HttpModules.Config;
 using System.Diagnostics;
@@ -304,7 +305,8 @@ namespace Satrabel.HttpModules
 
                 // Find tabid
                 GetTab(cacheCtrl, action);
-                if (app != null)
+
+                if (app != null && Host.DebugMode)
                 {
                     app.Context.Response.AppendHeader("X-OpenUrlRewriter-Info", action.CultureUrl + "*" + action.PageUrl + "*" + action.ModuleUrl);
                 }
