@@ -56,7 +56,8 @@ namespace Satrabel.HttpModules
                 }
 
 
-                if (request.HttpMethod != "GET") {
+                if (request.HttpMethod != "GET")
+                {
                     return;
                 }
 
@@ -75,11 +76,11 @@ namespace Satrabel.HttpModules
                     page.Load += OnPageLoad;
 
 
-                    
+
                     try
                     {
                         int PortalId = (int)HttpContext.Current.Items["UrlRewrite:PortalId"];
-                        if (UrlRewiterSettings.IsW3C(PortalId) )
+                        if (UrlRewiterSettings.IsW3C(PortalId))
                         {
                             //app.Response.Filter = new PageFilter(app.Response.Filter);
 
@@ -89,13 +90,13 @@ namespace Satrabel.HttpModules
 
 
                             app.Response.AddHeader("X-UA-Compatible", "IE=edge");
-                        }                        
+                        }
                     }
                     catch { }
 
-                    
 
-                    
+
+
                 }
             }
             catch (Exception ex)
@@ -117,7 +118,7 @@ namespace Satrabel.HttpModules
 
 
 
-       
+
         private void OnPageInit(object sender, EventArgs e)
         {
             try
@@ -164,7 +165,8 @@ namespace Satrabel.HttpModules
                     {
                         MetaRobots.Content = "NOINDEX, NOFOLLOW";
                     }
-                    else if (page.Request.QueryString["ctl"] != null) {
+                    else if (page.Request.QueryString["ctl"] != null)
+                    {
                         string ctlQueryString = page.Request.QueryString["ctl"].ToLower();
                         if (ctlQueryString == "terms" &&
                             UrlRewiterSettings.IsDisableTermsIndex(page.PortalSettings.PortalId))
@@ -179,20 +181,20 @@ namespace Satrabel.HttpModules
                             Cache.SetLastModified(DateTime.Now);
                             Cache.VaryByParams.IgnoreParams = true;
                             */
-                            
+
                         }
                         else if (ctlQueryString == "privacy" &&
                                 UrlRewiterSettings.IsDisablePrivacyIndex(page.PortalSettings.PortalId))
                         {
                             MetaRobots.Content = "NOINDEX, NOFOLLOW";
                         }
-                        if (ctlQueryString == "login" || 
+                        if (ctlQueryString == "login" ||
                             ctlQueryString == "register" ||
                             ctlQueryString == "sendpassword")
                         {
                             MetaRobots.Content = "NOINDEX, NOFOLLOW";
-                        }                    
-                    }                                       
+                        }
+                    }
                 }
                 if (page.Request.QueryString["ctl"] != null)
                 {
@@ -206,7 +208,7 @@ namespace Satrabel.HttpModules
                         if (url.Contains('?'))
                         {
                             url = url.Remove(url.IndexOf('?'));
-                        }                                                
+                        }
 
                         //Add Canonical <link>
                         var canonicalLink = new HtmlLink();
@@ -254,6 +256,8 @@ namespace Satrabel.HttpModules
                         altLink.Attributes["rel"] = "alternate";
                         altLink.Attributes["hreflang"] = LocaleUrl;
 
+
+
                         // Add the HtmlLink to the Head section of the page.
                         if (CanViewPage)
                         {
@@ -274,7 +278,7 @@ namespace Satrabel.HttpModules
 
             }
             catch (Exception ex)
-            {               
+            {
                 DnnLog.Error(ex);
 
             }
@@ -296,7 +300,7 @@ namespace Satrabel.HttpModules
                 string urlReferrer = "";
                 try
                 {
-                    
+
 
 
                 }
@@ -305,7 +309,7 @@ namespace Satrabel.HttpModules
                     DnnLog.Error(exc);
 
                 }
-               
+
 
 
 
@@ -315,7 +319,8 @@ namespace Satrabel.HttpModules
         public void OnEndRequest(object s, EventArgs e)
         {
 
-            if (s == null) {
+            if (s == null)
+            {
                 return;
             }
             var app = (HttpApplication)s;
@@ -325,7 +330,8 @@ namespace Satrabel.HttpModules
                 Stopwatch timer = (Stopwatch)HttpContext.Current.Items["UrlRewrite:Timer"];
                 app.Response.AddHeader("X-OpenUrlRewriter-OnEndRequest", timer.Elapsed.TotalMilliseconds.ToString());
             }
-            catch {            
+            catch
+            {
             }
 #endif 
             int PortalId = -1;
@@ -344,9 +350,9 @@ namespace Satrabel.HttpModules
             {
                 return;
             }
-            
 
-            
+
+
             var server = app.Server;
             var request = app.Request;
             var response = app.Response;
@@ -375,7 +381,7 @@ namespace Satrabel.HttpModules
                     originalurl = HttpContext.Current.Items["UrlRewrite:OriginalUrl"].ToString();
                 }
                 catch { }
-               
+
                 int TabId = -1;
                 try
                 {
@@ -430,12 +436,13 @@ namespace Satrabel.HttpModules
 
                 //log visit
                 bool DoLog = true;
-                if (PortalId == -1) {
+                if (PortalId == -1)
+                {
                     DoLog = false;
                 }
 
                 UserInfo objUserInfo = UserController.GetCurrentUserInfo();
-                if (!UrlRewiterSettings.IsLogAuthentificatedUsers(PortalId) && objUserInfo != null && objUserInfo.UserID != -1 )
+                if (!UrlRewiterSettings.IsLogAuthentificatedUsers(PortalId) && objUserInfo != null && objUserInfo.UserID != -1)
                 {
                     DoLog = false;
                 }
@@ -444,7 +451,7 @@ namespace Satrabel.HttpModules
                 {
                     DoLog = false;
                 }
-                                
+
                 if (DoLog)
                 {
                     if (PortalId != -1 && UrlRewiterSettings.IsLogEachUrlOneTime(PortalId))
@@ -457,7 +464,7 @@ namespace Satrabel.HttpModules
                     objSiteLogs.AddUrlLog(PortalId, objUserInfo.UserID, urlReferrer, RewriteUrl, originalurl, RedirectUrl,
                                        request.UserAgent, request.UserHostAddress, request.UserHostName,
                                        TabId, statusCode,
-                                       intSiteLogBuffer, strSiteLogStorage);                   
+                                       intSiteLogBuffer, strSiteLogStorage);
                 }
             }
             catch (Exception exc)
