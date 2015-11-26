@@ -675,7 +675,8 @@ namespace Satrabel.HttpModules
              */
 
             var qs = getQSParams(newLocale.Code, islocalized);
-            if (islocalized && qs.Length > 0) {
+            if (islocalized && qs.Length > 0 && !string.IsNullOrEmpty(qs[0]))
+            {
                 // url with query parameters are bad if page is not neutral (in most of the cases)
                 CanViewPage = false;
             }
