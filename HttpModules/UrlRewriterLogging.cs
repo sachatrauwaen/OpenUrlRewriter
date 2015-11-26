@@ -660,6 +660,10 @@ namespace Satrabel.HttpModules
                     CanViewPage = false;
                 }
             }
+            else
+            {
+                CanViewPage = false;
+            }
             /*
              return
                  objSecurity.InputFilter(
