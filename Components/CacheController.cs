@@ -282,7 +282,8 @@ namespace Satrabel.OpenUrlRewriter.Components
                 rule = GetFirstRule(tabRules, CultureCode);
             }
             //without tabid
-            if (rule == null)
+            //if (rule == null) 22/3/2016
+            else
             {
                 rule = GetFirstRule(rules, CultureCode);
             }
@@ -310,7 +311,8 @@ namespace Satrabel.OpenUrlRewriter.Components
                     rule = GetFirstRule(tabRules, CultureCode);
                 }
                 //without tabid
-                if (rule == null)
+                //if (rule == null) 22/3/2016
+                else
                 {
                     rule = GetFirstRule(rules, CultureCode);
                 }

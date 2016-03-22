@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="OpenUrlRewriter" type="Module" version="01.03.05">
+    <package name="OpenUrlRewriter" type="Module" version="01.03.06">
       <friendlyName>OpenUrlRewriter</friendlyName>
       <description>Satrabel OpenUrlRewriter module</description>
       <iconFile>/Icons/Sigma/AdvancedUrlMngmt_32x32.png</iconFile>
@@ -206,7 +206,7 @@
                       </providers>
                     </urlRule>
                   </node>
-
+  
                   <node path="/configuration/system.webServer/modules/add[@name='UrlRewrite']" action="remove" collision="overwrite" />
 
                   <node path="/configuration/system.webServer/modules/add[@name='RequestFilter']"
