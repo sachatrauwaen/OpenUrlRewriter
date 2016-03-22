@@ -3,7 +3,7 @@
     <package name="OpenUrlRewriter" type="Module" version="01.02.01">
       <friendlyName>OpenUrlRewriter</friendlyName>
       <description>Satrabel OpenUrlRewriter module</description>
-      <iconFile>Images/icon_search_32px.gif</iconFile>
+      <iconFile>~/Images/icon_search_32px.gif</iconFile>
       <owner>
         <name>Sacha Trauwaen</name>
         <organization>Satrabel</organization>
