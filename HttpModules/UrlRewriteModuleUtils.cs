@@ -1377,7 +1377,7 @@ namespace Satrabel.HttpModules
                             }
                             action.RedirectModule = rule.ReplaceRedirectDestination(parameters);
                             action.DoRedirect = true;
-                            action.Raison += "+ModuleRule:" + parameters + ">" + action.RedirectModule;
+                            action.Raison += "+CustomModuleRule:" + parameters + ">" + action.RedirectModule;
                         }
                         else
                         {
@@ -1400,7 +1400,7 @@ namespace Satrabel.HttpModules
                         //action.RedirectUrl = redirect.RedirectUrl.Replace(parameters.TrimStart('/'), rule.RedirectDestination);
                         action.RedirectModule = rule.RedirectDestination;
                         action.DoRedirect = true;
-                        action.Raison += "+ModuleRule:" + rule.Url + ">" + rule.RedirectDestination;
+                        action.Raison += "+ModuleRule:" + rule.Url + ">" + rule.RedirectDestination + " (" + action.TabId+")";
 
                     }
                     else if (parameters != rule.Url) // because different case
