@@ -110,3 +110,4 @@ web.Debug.config
 web.Release.config
 web.config
 OpenUrlRewriter.xml
+Package/
