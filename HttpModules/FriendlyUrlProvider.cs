@@ -759,7 +759,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                     queryString = queryString.TrimStart('&');
 
                     // no urlrules for admin pages because the rewriter dont process UrlRules when tabid is present
-                    if (!queryString.ToLower().Contains("tabid="))
+                    if (!queryString.ToLower().Split(Convert.ToChar("&")).Any(p=> p.StartsWith("tabid=")))
                         nameValuePairs = queryString.Split(Convert.ToChar("&"));
                 }
 

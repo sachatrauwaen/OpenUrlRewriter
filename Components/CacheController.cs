@@ -44,10 +44,11 @@ namespace Satrabel.OpenUrlRewriter.Components
 
             if (config.Rules.Count == 0)
             {
-                Logger.Info("Rules.Count = 0 -> ClearCache");
+                #if DEBUG
+                Logger.Info("Rules.Count = 0 -> ClearCache " + cacheKey);
+                #endif
                 DataCache.ClearCache(cacheKey);
             }
-
             return config;
         }
 
@@ -281,7 +282,8 @@ namespace Satrabel.OpenUrlRewriter.Components
                 rule = GetFirstRule(tabRules, CultureCode);
             }
             //without tabid
-            if (rule == null)
+            //if (rule == null) 22/3/2016
+            else
             {
                 rule = GetFirstRule(rules, CultureCode);
             }
@@ -309,7 +311,8 @@ namespace Satrabel.OpenUrlRewriter.Components
                     rule = GetFirstRule(tabRules, CultureCode);
                 }
                 //without tabid
-                if (rule == null)
+                //if (rule == null) 22/3/2016
+                else
                 {
                     rule = GetFirstRule(rules, CultureCode);
                 }

@@ -18,6 +18,7 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Entities.Urls.Config;
 using DotNetNuke.Common.Internal;
 using System.IO;
+using DotNetNuke.Entities.Host;
 #else
 using DotNetNuke.HttpModules.Config;
 using System.Diagnostics;
@@ -304,7 +305,8 @@ namespace Satrabel.HttpModules
 
                 // Find tabid
                 GetTab(cacheCtrl, action);
-                if (app != null)
+
+                if (app != null && Host.DebugMode)
                 {
                     app.Context.Response.AppendHeader("X-OpenUrlRewriter-Info", action.CultureUrl + "*" + action.PageUrl + "*" + action.ModuleUrl);
                 }
@@ -1375,7 +1377,7 @@ namespace Satrabel.HttpModules
                             }
                             action.RedirectModule = rule.ReplaceRedirectDestination(parameters);
                             action.DoRedirect = true;
-                            action.Raison += "+ModuleRule:" + parameters + ">" + action.RedirectModule;
+                            action.Raison += "+CustomModuleRule:" + parameters + ">" + action.RedirectModule;
                         }
                         else
                         {
@@ -1398,7 +1400,7 @@ namespace Satrabel.HttpModules
                         //action.RedirectUrl = redirect.RedirectUrl.Replace(parameters.TrimStart('/'), rule.RedirectDestination);
                         action.RedirectModule = rule.RedirectDestination;
                         action.DoRedirect = true;
-                        action.Raison += "+ModuleRule:" + rule.Url + ">" + rule.RedirectDestination;
+                        action.Raison += "+ModuleRule:" + rule.Url + ">" + rule.RedirectDestination + " (" + action.TabId+")";
 
                     }
                     else if (parameters != rule.Url) // because different case
