@@ -256,8 +256,6 @@ namespace Satrabel.HttpModules
                         altLink.Attributes["rel"] = "alternate";
                         altLink.Attributes["hreflang"] = LocaleUrl;
 
-
-
                         // Add the HtmlLink to the Head section of the page.
                         if (CanViewPage)
                         {
@@ -280,7 +278,6 @@ namespace Satrabel.HttpModules
             catch (Exception ex)
             {
                 DnnLog.Error(ex);
-
             }
         }
 
@@ -333,7 +330,7 @@ namespace Satrabel.HttpModules
             catch
             {
             }
-#endif 
+#endif
             int PortalId = -1;
             try
             {

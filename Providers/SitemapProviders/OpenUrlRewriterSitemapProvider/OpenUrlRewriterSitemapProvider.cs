@@ -75,14 +75,14 @@ namespace Satrabel.SitemapProviders
 
             this.ps = ps;
 
-            var Locales = ps.ContentLocalizationEnabled ? 
-                                    LocaleController.Instance.GetPublishedLocales(ps.PortalId).Values : 
+            var Locales = ps.ContentLocalizationEnabled ?
+                                    LocaleController.Instance.GetPublishedLocales(ps.PortalId).Values :
                                     LocaleController.Instance.GetLocales(ps.PortalId).Values;
 
-            bool MultiLanguage = Locales.Count > 1;                        
+            bool MultiLanguage = Locales.Count > 1;
 
             foreach (Locale loc in Locales)
-            {               
+            {
                 foreach (TabInfo objTab in objTabs.GetTabsByPortal(portalId).Values)
                 {
                     if (objTab.CultureCode == loc.Code || objTab.IsNeutralCulture)
@@ -95,9 +95,9 @@ namespace Satrabel.SitemapProviders
                             (Null.IsNull(objTab.EndDate) || objTab.EndDate > DateTime.Now) && IsTabPublic(objTab.TabPermissions) &&
                             objTab.TabID != objPortal.SearchTabId && objTab.TabID != objPortal.UserTabId && (objPortal.UserTabId == Null.NullInteger || objTab.ParentId != objPortal.UserTabId) && objTab.TabID != objPortal.LoginTabId && objTab.TabID != objPortal.RegisterTabId)
                         {
-                            var allowIndex = true; 
-                            if ( (!objTab.TabSettings.ContainsKey("AllowIndex") || !bool.TryParse(objTab.TabSettings["AllowIndex"].ToString(), out allowIndex) || allowIndex ) &&
-                                 (includeHiddenPages || objTab.IsVisible) )
+                            var allowIndex = true;
+                            if ((!objTab.TabSettings.ContainsKey("AllowIndex") || !bool.TryParse(objTab.TabSettings["AllowIndex"].ToString(), out allowIndex) || allowIndex) &&
+                                 (includeHiddenPages || objTab.IsVisible))
                             {
                                 // page url
                                 pageUrl = GetPageUrl(objTab, MultiLanguage ? loc.Code : null);
@@ -120,7 +120,7 @@ namespace Satrabel.SitemapProviders
                             }
                         }
                     }
-                }                
+                }
             }
             return urls;
         }
@@ -142,12 +142,13 @@ namespace Satrabel.SitemapProviders
                             LocaleUrl = loc.Code.Substring(0, 2);
 
                         bool CanViewPage;
-                        var alt = new OpenSitemapAlternate() {
+                        var alt = new OpenSitemapAlternate()
+                        {
                             Hreflang = LocaleUrl,
                             Href = newUrl(tabId, loc.Code, out CanViewPage, AdditionalParameters)
                         };
-                                               
-                        
+
+
                         if (CanViewPage && !string.IsNullOrEmpty(alt.Href))
                         {
                             alternates.Add(alt);
@@ -171,9 +172,9 @@ namespace Satrabel.SitemapProviders
             return alternates;
         }
 
-        private string newUrl(int tabId, string newLanguage, out bool CanViewPage, params string[] AdditionalParameters)
+        private string newUrl(int tabId, string newLanguage, out bool canViewPage, params string[] additionalParameters)
         {
-            CanViewPage = true;
+            canViewPage = true;
             string Url = "";
             Locale newLocale = LocaleController.Instance.GetLocale(newLanguage);
             //Ensure that the current ActiveTab is the culture of the new language
@@ -183,11 +184,11 @@ namespace Satrabel.SitemapProviders
             {
                 islocalized = true;
                 tabId = localizedTab.TabID;
-                if (localizedTab.IsDeleted || localizedTab.TabType != TabType.Normal || !IsTabPublic(localizedTab.TabPermissions) )
+                if (localizedTab.IsDeleted || localizedTab.TabType != TabType.Normal || !IsTabPublic(localizedTab.TabPermissions))
                 {
-                    CanViewPage = false;
+                    canViewPage = false;
                 }
-                Url = Globals.NavigateURL(localizedTab.TabID, localizedTab.IsSuperTab, ps, "", newLanguage, AdditionalParameters);    
+                Url = Globals.NavigateURL(localizedTab.TabID, localizedTab.IsSuperTab, ps, "", newLanguage, additionalParameters);
             }
             /*
             if (Url.ToLower().IndexOf(ps.PortalAlias.HTTPAlias.ToLower()) == -1)
@@ -205,7 +206,7 @@ namespace Satrabel.SitemapProviders
             }
             */
             return Url;
-            
+
         }
         /// <summary>
         ///   Return the sitemap url node for the page
@@ -271,7 +272,7 @@ namespace Satrabel.SitemapProviders
                 }
                 else
                 {
-                    priority = Convert.ToSingle(1 - (objTab.Level*0.1));
+                    priority = Convert.ToSingle(1 - (objTab.Level * 0.1));
                 }
 
                 if (priority < minPagePriority)
