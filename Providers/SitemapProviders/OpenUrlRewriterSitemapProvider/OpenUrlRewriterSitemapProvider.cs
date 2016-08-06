@@ -190,6 +190,10 @@ namespace Satrabel.SitemapProviders
                 }
                 Url = Globals.NavigateURL(localizedTab.TabID, localizedTab.IsSuperTab, ps, "", newLanguage, additionalParameters);
             }
+            else
+            {
+                canViewPage = false;
+            }
             /*
             if (Url.ToLower().IndexOf(ps.PortalAlias.HTTPAlias.ToLower()) == -1)
             {
