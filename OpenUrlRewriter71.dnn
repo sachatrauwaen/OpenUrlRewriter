@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="OpenUrlRewriter" type="Module" version="01.03.07">
+    <package name="OpenUrlRewriter" type="Module" version="01.03.08">
       <friendlyName>OpenUrlRewriter</friendlyName>
       <description>Satrabel OpenUrlRewriter module</description>
       <iconFile>~/Icons/Sigma/AdvancedUrlMngmt_32x32.png</iconFile>
@@ -35,7 +35,7 @@
               <path>Providers\DataProviders\SqlDataProvider</path>
               <name>01.01.02.SqlDataProvider</name>
               <version>01.01.02</version>
-            </script>            
+            </script>
             <script type="UnInstall">
               <path>Providers\DataProviders\SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
@@ -188,7 +188,7 @@
                 <nodes>
                   <node path="/configuration/configSections/sectionGroup[@name='dotnetnuke']"
                         action="update" key="name" collision="overwrite">
-                    <section name="urlRule" requirePermission="false" type="DotNetNuke.Framework.Providers.ProviderConfigurationHandler, DotNetNuke"/>                    
+                    <section name="urlRule" requirePermission="false" type="DotNetNuke.Framework.Providers.ProviderConfigurationHandler, DotNetNuke"/>
                   </node>
                   <node path="/configuration/dotnetnuke/friendlyUrl/providers"
                         action="update" key="name" collision="ignore">
@@ -206,7 +206,7 @@
                       </providers>
                     </urlRule>
                   </node>
-  
+
                   <node path="/configuration/system.webServer/modules/add[@name='UrlRewrite']" action="remove" collision="overwrite" />
 
                   <node path="/configuration/system.webServer/modules/add[@name='RequestFilter']"
@@ -225,7 +225,7 @@
                   <node path="/configuration/dotnetnuke/caching/providers/add[@name='OpenUrlRewriterFBCachingProvider']"
                         action="remove" collision="overwrite" />
                   <node path="/configuration/dotnetnuke/caching" action="updateattribute" name="defaultProvider" value="FileBasedCachingProvider" collision="overwrite" />
-                  
+
                   <node path="/configuration/dotnetnuke/sitemap/providers"
                         action="update" key="name" collision="ignore">
                     <add name="openUrlRewriterSitemapProvider" type="Satrabel.SitemapProviders.OpenUrlRewriterSitemapProvider, Satrabel.OpenUrlRewriter" providerPath="~\Providers\MembershipProviders\Sitemap\OpenUrlRewriterSitemapProvider\"/>
@@ -284,7 +284,7 @@
                   <node path="/configuration/dotnetnuke/caching/providers/add[@name='OpenUrlRewriterFBCachingProvider']"
                         action="remove" />
                   <node path="/configuration/dotnetnuke/caching" action="updateattribute" name="defaultProvider" value="FileBasedCachingProvider" />
-                  
+
                   <node path="/configuration/dotnetnuke/sitemap/providers"
                         action="update" key="name" collision="ignore">
                     <add name="coreSitemapProvider" type="DotNetNuke.SitemapProviders.CoreSitemapProvider, DotNetNuke" providerPath="~\Providers\MembershipProviders\Sitemap\CoreSitemapProvider\" />
@@ -296,7 +296,7 @@
                         action="update" key="name" collision="overwrite">
                     <add name="SitemapHandler" path="Sitemap.aspx" verb="*" type="DotNetNuke.Services.Sitemap.SitemapHandler, DotNetNuke" preCondition="integratedMode" />
                   </node>
-                  
+
                   <node path="/configuration/system.webServer/handlers/add[@name='OpenSitemapHandler']" action="remove" />
 
                   <node path="/configuration/system.web/httpHandlers"
@@ -304,10 +304,10 @@
                     <add verb="*" path="Sitemap.aspx" type="DotNetNuke.Services.Sitemap.SitemapHandler, DotNetNuke" />
                   </node>
 
-                    <node path="/configuration/system.web/httpHandlers/add[@path='Sitemap.xml']" action="remove" />
+                  <node path="/configuration/system.web/httpHandlers/add[@path='Sitemap.xml']" action="remove" />
 
 
-                    </nodes>
+                </nodes>
               </configuration>
             </uninstall>
           </config>

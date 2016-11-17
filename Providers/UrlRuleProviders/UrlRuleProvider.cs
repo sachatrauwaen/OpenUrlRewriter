@@ -76,37 +76,37 @@ namespace Satrabel.HttpModules.Provider
         }
 
        
-        protected static string CleanupUrl(string Url)
+        protected static string CleanupUrl(string text)
         {
-            string replaceWith = "-";
+            const string replaceWith = "-";
 
-            string AccentFrom = "ÀÁÂÃÄÅàáâãäåảạăắằẳẵặấầẩẫậÒÓÔÕÖØòóôõöøỏõọồốổỗộơớờởợÈÉÊËèéêëẻẽẹếềểễệÌÍÎÏìíîïỉĩịÙÚÛÜùúûüủũụưứừửữựÿýỳỷỹỵÑñÇçĞğİıŞş₤€ßđ";
-            string AccentTo   = "AAAAAAaaaaaaaaaaaaaaaaaaaOOOOOOoooooooooooooooooooEEEEeeeeeeeeeeeeIIIIiiiiiiiUUUUuuuuuuuuuuuuuyyyyyyNnCcGgIiSsLEsd";
+            const string accentFrom = "ÀÁÂÃÄÅàáâãäåảạăắằẳẵặấầẩẫậÒÓÔÕÖØòóôõöøỏõọồốổỗộơớờởợÈÉÊËèéêëẻẽẹếềểễệÌÍÎÏìíîïỉĩịÙÚÛÜùúûüủũụưứừửữựÿýỳỷỹỵÑñÇçĞğİıŞş₤€ßđ";
+            const string accentTo = "AAAAAAaaaaaaaaaaaaaaaaaaaOOOOOOoooooooooooooooooooEEEEeeeeeeeeeeeeIIIIiiiiiiiUUUUuuuuuuuuuuuuuyyyyyyNnCcGgIiSsLEsd";
 
-            Url = Url.ToLower().Trim();
+            text = text.ToLower().Trim();
 
-            StringBuilder result = new StringBuilder(Url.Length);
-            string ch = ""; int i = 0; int last = Url.ToCharArray().GetUpperBound(0);
-            foreach (char c in Url.ToCharArray())
+            StringBuilder result = new StringBuilder(text.Length);
+            int i = 0; int last = text.ToCharArray().GetUpperBound(0);
+            foreach (char c in text)
             {
-                
+
                 //use string for manipulation
-                ch = c.ToString();
+                var ch = c.ToString();
                 if (ch == " ")
                 {
                     ch = replaceWith;
                 }
-                else if (@".[]|:;`%\\""^{}№".Contains(ch))
+                else if (@".[]|:;`%\\""^№".Contains(ch))
                     ch = "";
-                else if (@" &$+,/=?@~#<>()¿¡«»!'’–*…".Contains(ch))
+                else if (@" &$+,/=?@~#<>(){}¿¡«»!'’–*…“”".Contains(ch))
                     ch = replaceWith;
                 else
                 {
-                    for (int ii = 0; ii < AccentFrom.Length; ii++)
+                    for (int ii = 0; ii < accentFrom.Length; ii++)
                     {
-                        if (ch == AccentFrom[ii].ToString())
+                        if (ch == accentFrom[ii].ToString())
                         {
-                            ch = AccentTo[ii].ToString();
+                            ch = accentTo[ii].ToString();
                         }
                     }
                 }
@@ -122,21 +122,20 @@ namespace Satrabel.HttpModules.Provider
                     result.Append(ch);
                 i++;//increment counter
             }
-            result = result.Replace(replaceWith + replaceWith, replaceWith);
-            result = result.Replace(replaceWith + replaceWith, replaceWith);
-            
-            // remove ending -
-            while (result.Length > 1 && result[result.Length - 1] == replaceWith[0])
+            string retval = result.ToString();
+            if (!string.IsNullOrEmpty(replaceWith))
             {
-                result.Remove(result.Length - 1, 1);
+                while (retval.Contains(replaceWith + replaceWith))
+                {
+                    retval = retval.Replace(replaceWith + replaceWith, replaceWith);
+                }
+                foreach (char c in replaceWith)
+                {
+                    retval = retval.Trim(c);
+                }
             }
-            // remove starting -
-            while (result.Length > 1 && result[0] == replaceWith[0])
-            {
-                result.Remove(0, 1);
-            }
-             
-            return result.ToString();
+
+            return retval;
         }
     }
 
