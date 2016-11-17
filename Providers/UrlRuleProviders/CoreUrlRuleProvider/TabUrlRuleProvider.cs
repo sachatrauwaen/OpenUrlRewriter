@@ -18,12 +18,14 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Cache;
 using DotNetNuke.Common;
+using DotNetNuke.Instrumentation;
 
 namespace Satrabel.HttpModules.Provider
 {
 
     public class TabUrlRuleProvider : UrlRuleProvider
     {
+        private static readonly DnnLogger Logger = DnnLogger.GetClassLogger(typeof(TabUrlRuleProvider));
 
 
         private const string ProviderName = "tabUrlRuleProvider";
@@ -94,6 +96,7 @@ namespace Satrabel.HttpModules.Provider
                         rule.Url = tabUrl.Url.Trim('/');
                     }
 #endif
+                    bool ok2Continue = true;
 
                     if (tab.TabType != TabType.Normal)
                     {
@@ -103,7 +106,15 @@ namespace Satrabel.HttpModules.Provider
                             case TabType.Tab:
                                 //Get the tab being linked to
                                 TabInfo tempTab = new TabController().GetTab(Int32.Parse(tab.Url), tab.PortalID, false);
-                                redirUrl = tempTab.TabPath.Replace("//", "/").Substring(1);
+                                if (tempTab == null)
+                                {
+                                    Logger.Error(string.Format("Tab {0} of portal {1} redirects to a tab ({2}) that doesn't exist anymore", tab.TabPath, tab.PortalID, tab.Url));
+                                    ok2Continue = false;
+                                }
+                                else
+                                {
+                                    redirUrl = tempTab.TabPath.Replace("//", "/").Substring(1);
+                                }
                                 break;
                             case TabType.File:
                                 //var file = FileManager.Instance.GetFile(Int32.Parse(tab.Url.Substring(7)));
@@ -118,55 +129,57 @@ namespace Satrabel.HttpModules.Provider
                         rule.RedirectDestination = redirUrl;
                     }
 
-
-                    Rules.Add(rule);
-                    var ruleRedirect = new UrlRule
+                    if (ok2Continue)
                     {
-                        RuleType = UrlRuleType.Tab,
-                        CultureCode = tab.CultureCode,
-                        TabId = tab.TabID,
-                        Parameters = "tabid=" + tab.TabID.ToString(),
-                        Action = UrlRuleAction.Redirect,
-                        Url = tab.TabPath.Replace("//", "/").TrimStart('/').ToLower(),
-                        RedirectDestination = rule.Url,
-                        RemoveTab = RemoveTab && !MLNeutralHomeTab
-                    };
-                    if (rule.Url != ruleRedirect.Url)
-                    {
-                        Rules.Add(ruleRedirect);
-                    }
-
-                    // if RemoveTab for multi-language and neutral home page
-                    // add a culture specific rewrite
-                    if (RemoveTab && MLNeutralHomeTab)
-                    {
-                        var ruleNeutral = new UrlRule
+                        Rules.Add(rule);
+                        var ruleRedirect = new UrlRule
                         {
                             RuleType = UrlRuleType.Tab,
-                            CultureCode = DefaultLocale.Code,
+                            CultureCode = tab.CultureCode,
                             TabId = tab.TabID,
-                            Parameters = rule.Parameters,
-                            Action = UrlRuleAction.Rewrite,
-                            Url = rule.Url,
-                            RemoveTab = true
-                        };
-                        Rules.Add(ruleNeutral);
-                        var ruleRedirectNeutral = new UrlRule
-                        {
-                            RuleType = UrlRuleType.Tab,
-                            CultureCode = DefaultLocale.Code,
-                            TabId = tab.TabID,
-                            Parameters = ruleRedirect.Parameters,
+                            Parameters = "tabid=" + tab.TabID.ToString(),
                             Action = UrlRuleAction.Redirect,
-                            Url = ruleRedirect.Url,
-                            RedirectDestination = ruleNeutral.Url,
-                            RemoveTab = true
+                            Url = tab.TabPath.Replace("//", "/").TrimStart('/').ToLower(),
+                            RedirectDestination = rule.Url,
+                            RemoveTab = RemoveTab && !MLNeutralHomeTab
                         };
-                        if (ruleNeutral.Url != ruleRedirectNeutral.Url)
+                        if (rule.Url != ruleRedirect.Url)
                         {
-                            Rules.Add(ruleRedirectNeutral);
+                            Rules.Add(ruleRedirect);
                         }
 
+                        // if RemoveTab for multi-language and neutral home page
+                        // add a culture specific rewrite
+                        if (RemoveTab && MLNeutralHomeTab)
+                        {
+                            var ruleNeutral = new UrlRule
+                            {
+                                RuleType = UrlRuleType.Tab,
+                                CultureCode = DefaultLocale.Code,
+                                TabId = tab.TabID,
+                                Parameters = rule.Parameters,
+                                Action = UrlRuleAction.Rewrite,
+                                Url = rule.Url,
+                                RemoveTab = true
+                            };
+                            Rules.Add(ruleNeutral);
+                            var ruleRedirectNeutral = new UrlRule
+                            {
+                                RuleType = UrlRuleType.Tab,
+                                CultureCode = DefaultLocale.Code,
+                                TabId = tab.TabID,
+                                Parameters = ruleRedirect.Parameters,
+                                Action = UrlRuleAction.Redirect,
+                                Url = ruleRedirect.Url,
+                                RedirectDestination = ruleNeutral.Url,
+                                RemoveTab = true
+                            };
+                            if (ruleNeutral.Url != ruleRedirectNeutral.Url)
+                            {
+                                Rules.Add(ruleRedirectNeutral);
+                            }
+
+                        }
                     }
                 }
             }
