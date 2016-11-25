@@ -96,7 +96,7 @@ namespace Satrabel.HttpModules.Provider
                 {
                     ch = replaceWith;
                 }
-                else if (@".[]|:;`%\\""^{}№".Contains(ch))
+                else if (@".[]|:;`%\\""^{}№”".Contains(ch))
                     ch = "";
                 else if (@" &$+,/=?@~#<>()¿¡«»!'’–*…".Contains(ch))
                     ch = replaceWith;
