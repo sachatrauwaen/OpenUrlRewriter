@@ -40,26 +40,28 @@ namespace Satrabel.HttpModules.Provider
         Module = 2,
         Custom = 3,
         TabModule = 4
-        
+
     }
 
 
     [Serializable]
     public class UrlRule
     {
-        public UrlRule () {
+        public UrlRule()
+        {
             InSitemap = true;
         }
 
 
         public UrlRuleType RuleType { get; set; }
 
-        public string RuleTypeString {
-            get { return RuleType.ToString(); } 
+        public string RuleTypeString
+        {
+            get { return RuleType.ToString(); }
         }
-        public string CultureCode { get; set; }        
-        public int TabId { get; set; }          
-        public string Parameters { get; set; }                
+        public string CultureCode { get; set; }
+        public int TabId { get; set; }
+        public string Parameters { get; set; }
         public bool RemoveTab { get; set; }
         public UrlRuleAction Action { get; set; }
         public string ActionString
@@ -70,36 +72,55 @@ namespace Satrabel.HttpModules.Provider
         public string RedirectDestination { get; set; }
         public int RedirectStatus { get; set; }
         public bool InSitemap { get; set; }
+        public bool Patern { get; set; }
 
 
-        private static string GenerateRegExp(string patern) {
+        private static string GenerateRegExp(string patern)
+        {
             return "^" + patern.Replace("+", "\\+").Replace("[", "(?'").Replace("]", "'.*)").Replace("{", "(?'").Replace("}", "'\\d*)") + "$";
         }
 
         public bool IsMatch(string ModuleQueryString)
-        { 
-           
+        {
+            if (RuleType == UrlRuleType.Custom || Patern)
+            {
                 string internRegExp = GenerateRegExp(Parameters);
-                
                 Regex regex = new Regex(internRegExp, RegexOptions.IgnoreCase);
                 return regex.IsMatch(ModuleQueryString);
-                
+            }
+            else
+            {
+                return Parameters.ToLower() == ModuleQueryString.ToLower();
+            }
+
         }
 
         public bool IsMatchUrl(string ModuleUrl)
         {
-            string internRegExp = GenerateRegExp(Url);            
-            Regex regex = new Regex(internRegExp, RegexOptions.IgnoreCase);
-            return regex.IsMatch(ModuleUrl);
-
+            if (RuleType == UrlRuleType.Custom || Patern)
+            {
+                string internRegExp = GenerateRegExp(Url);
+                Regex regex = new Regex(internRegExp, RegexOptions.IgnoreCase);
+                return regex.IsMatch(ModuleUrl);
+            }
+            else
+            {
+                return Url == ModuleUrl;
+            }
         }
 
         public bool IsMatchRedirectDestination(string ModuleUrl)
         {
-            string internRegExp = GenerateRegExp(RedirectDestination);
-            Regex regex = new Regex(internRegExp, RegexOptions.IgnoreCase);
-            return regex.IsMatch(ModuleUrl);
-
+            if (RuleType == UrlRuleType.Custom || Patern)
+            {
+                string internRegExp = GenerateRegExp(RedirectDestination);
+                Regex regex = new Regex(internRegExp, RegexOptions.IgnoreCase);
+                return regex.IsMatch(ModuleUrl);
+            }
+            else
+            {
+                return RedirectDestination == ModuleUrl;
+            }
         }
 
         public string Replace(string ModuleQueryString, string PageName)
@@ -111,7 +132,7 @@ namespace Satrabel.HttpModules.Provider
             if (regex.IsMatch(ModuleQueryString))
             {
                 return regex.Replace(ModuleQueryString, externRegExp);
-                    
+
             }
             return ModuleQueryString;
         }
@@ -124,7 +145,7 @@ namespace Satrabel.HttpModules.Provider
             if (regex.IsMatch(ModuleUrl))
             {
                 string NewUrl = regex.Replace(ModuleUrl, internRegExp);
-               
+
                 return NewUrl;
             }
             return ModuleUrl;

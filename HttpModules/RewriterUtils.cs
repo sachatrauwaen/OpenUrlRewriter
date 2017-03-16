@@ -136,5 +136,15 @@ namespace Satrabel.HttpModules
 	        var omissions = omitSettings.Split(new char[] { '|' });
             return (from s in omissions where localPath.EndsWith(s) select s).Any();
         }
+
+        static internal string GetDomain(Uri url)
+        {
+#if DNN71
+            string myAlias = DotNetNuke.Common.Internal.TestableGlobals.Instance.GetDomainName(url, true);
+#else
+            string myAlias = GetDomainName(url, true);
+#endif
+            return myAlias;
+        }
     }
 }
