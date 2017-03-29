@@ -44,12 +44,26 @@ namespace Satrabel.OpenUrlRewriter.Components
 
             if (config.Rules.Count == 0)
             {
-                #if DEBUG
-                Logger.Info("Rules.Count = 0 -> ClearCache " + cacheKey);
-                #endif
+                Logger.Error("Rules.Count = 0 -> ClearCache " + cacheKey);
                 DataCache.ClearCache(cacheKey);
             }
             return config;
+        }
+
+        public void CheckCache()
+        {
+
+            string cacheKey = String.Format(UrlRuleConfigCacheKey, _portalId);
+            var config = CBO.GetCachedObject<UrlRuleConfiguration>(
+                            new CacheItemArgs(cacheKey, DataCache.TabCacheTimeOut, DataCache.TabCachePriority, _portalId),
+                            GetUrlRuleConfigCallBack);
+
+            if (config.Rules.Count == 0)
+            {
+                Logger.Error("CheckCache Rules.Count = 0 -> ClearCache " + cacheKey);
+                DataCache.ClearCache(cacheKey);
+            }
+            
         }
 
         private object GetUrlRuleConfigCallBack(CacheItemArgs cacheItemArgs)
@@ -131,11 +145,11 @@ namespace Satrabel.OpenUrlRewriter.Components
             IEnumerable<UrlRule> rules;
             if (TabId == Null.NullInteger)
             {
-                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.Url == Url && r.RemoveTab == true);
+                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.IsMatchUrl(Url) && r.RemoveTab == true);
             }
             else
             {
-                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.Url == Url);
+                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.IsMatchUrl(Url));
             }
 
             if (TabId != Null.NullInteger)
@@ -168,11 +182,11 @@ namespace Satrabel.OpenUrlRewriter.Components
             IEnumerable<UrlRule> rules;
             if (TabId == Null.NullInteger)
             {
-                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.Action == UrlRuleAction.Rewrite && r.Parameters == Parameters && r.RemoveTab == true);
+                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.Action == UrlRuleAction.Rewrite && r.IsMatch(Parameters) && r.RemoveTab == true);
             }
             else
             {
-                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.Action == UrlRuleAction.Rewrite && r.Parameters == Parameters);
+                rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.Action == UrlRuleAction.Rewrite && r.IsMatch(Parameters));
             }
 
             if (TabId != Null.NullInteger)
@@ -274,7 +288,7 @@ namespace Satrabel.OpenUrlRewriter.Components
             Url = Url.ToLower();
             UrlRule rule = null;
             bool RemoveTab = TabId == Null.NullInteger;
-            var rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.RedirectDestination == Url && r.Action == UrlRuleAction.Rewrite /*&& r.RemoveTab == RemoveTab*/);
+            var rules = _rules.Where(r => r.RuleType == UrlRuleType.Module && r.IsMatchRedirectDestination(Url) && r.Action == UrlRuleAction.Rewrite /*&& r.RemoveTab == RemoveTab*/);
             //with tabid
             if (TabId != Null.NullInteger)
             {

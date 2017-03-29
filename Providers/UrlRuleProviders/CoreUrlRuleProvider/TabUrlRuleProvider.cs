@@ -52,6 +52,7 @@ namespace Satrabel.HttpModules.Provider
             List<UrlRule> Rules = new List<UrlRule>();
             TabController tc = new TabController();
             Locale DefaultLocale = LocaleController.Instance.GetDefaultLocale(PortalId);
+            Dictionary<string, Locale> dicLocales = LocaleController.Instance.GetLocales(PortalId);
             PortalInfo objPortal = new PortalController().GetPortal(PortalId, DefaultLocale.Code);
             int DefaultHomeTabId = -1;
             if (objPortal != null)
@@ -68,12 +69,13 @@ namespace Satrabel.HttpModules.Provider
                     bool MLNeutralHomeTab = LocaleController.Instance.GetLocales(PortalId).Count > 1 &&
                             tab.TabID == DefaultHomeTabId && string.IsNullOrEmpty(tab.CultureCode);
 
-
+                    string cultureCode = tab.CultureCode;
+                    string ruleCultureCode = (dicLocales.Count > 1 ? cultureCode : null);
 
                     var rule = new UrlRule
                     {
                         RuleType = UrlRuleType.Tab,
-                        CultureCode = tab.CultureCode,
+                        CultureCode = ruleCultureCode,
                         TabId = tab.TabID,
                         Parameters = "tabid=" + tab.TabID.ToString(),
                         Action = UrlRuleAction.Rewrite,

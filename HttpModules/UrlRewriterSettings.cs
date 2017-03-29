@@ -122,7 +122,16 @@ namespace Satrabel.HttpModules
         private const string Manage404 = ModuleQualifier + "Manage404";
         public static bool IsManage404(int PortalId)
         {
-            return bool.Parse(PortalController.GetPortalSetting(Manage404, PortalId, "False"));
+            try
+            {
+                return bool.Parse(PortalController.GetPortalSetting(Manage404, PortalId, "False"));
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+            
         }
 
         public static void SetManage404(int PortalId, bool value)

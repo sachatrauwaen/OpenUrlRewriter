@@ -400,7 +400,7 @@ namespace Satrabel.HttpModules
                             portalAliasInfo.PortalID = portalId;
                             portalAliasInfo.HTTPAlias = portalAlias;
                             portalAliasController.AddPortalAlias(portalAliasInfo);
-                            app.Response.AppendHeader("X-Redirect-Reason", "auto add portalalis");
+                            app.Response.AppendHeader("X-Redirect-Reason", "auto add portalalias");
                             response.Redirect(app.Request.Url.ToString(), true);
                         }
                     }
