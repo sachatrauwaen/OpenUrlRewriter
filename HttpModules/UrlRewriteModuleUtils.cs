@@ -522,7 +522,7 @@ namespace Satrabel.HttpModules
                 return true;
             }
             */
-            if (WorkUrl.ToLower().StartsWith("/desktopmodules/") || WorkUrl.ToLower().StartsWith("/api/personabar/"))
+            if (WorkUrl.ToLower().StartsWith("/desktopmodules/") || WorkUrl.StartsWith("/API/"))
             {
                 return true;
             }
