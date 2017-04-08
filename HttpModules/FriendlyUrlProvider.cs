@@ -55,7 +55,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
         private readonly string _regexMatch;
 
         private readonly string _regexMatchDefaultPortal;
-        
+
 
         public OpenFriendlyUrlProvider()
         {
@@ -129,7 +129,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                 return _regexMatchDefaultPortal;
             }
         }
-        
+
         public override string FriendlyUrl(TabInfo tab, string path)
         {
             PortalSettings _portalSettings = PortalController.GetCurrentPortalSettings();
@@ -144,7 +144,8 @@ namespace Satrabel.Services.Url.FriendlyUrl
 
         public override string FriendlyUrl(TabInfo tab, string path, string pageName, PortalSettings settings)
         {
-            if (settings == null) {
+            if (settings == null)
+            {
                 return FriendlyUrl(tab, path, pageName);
             }
             return FriendlyUrl(tab, path, pageName, settings.PortalAlias.HTTPAlias);
@@ -182,12 +183,25 @@ namespace Satrabel.Services.Url.FriendlyUrl
                 }
                 if (!string.IsNullOrEmpty(CultureCode))
                 {
-                    var primaryAliases = DotNetNuke.Entities.Portals.Internal.TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(PortalId).ToList().Where(a => a.IsPrimary == true);
-                    var alias = primaryAliases.FirstOrDefault(a => string.Equals(a.CultureCode, CultureCode, StringComparison.InvariantCultureIgnoreCase) );
-                    if (alias != null) {
+                    var primaryAliases = DotNetNuke.Entities.Portals.Internal.TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(PortalId).AsQueryable();
+                    if (PortalSettings.Current != null && PortalSettings.Current.PortalAliasMappingMode == PortalSettings.PortalAliasMapping.Redirect)
+                    {
+                        primaryAliases = primaryAliases.Where(a => a.IsPrimary == true);
+                    }
+                    else
+                    {
+                        var mainAlias = primaryAliases.FirstOrDefault(a => string.IsNullOrEmpty(a.CultureCode) && portalAlias.StartsWith(a.HTTPAlias));
+                        if (mainAlias != null)
+                        {
+                            primaryAliases = primaryAliases.Where(a => a.HTTPAlias.StartsWith(mainAlias.HTTPAlias));
+                        }
+                    }
+                    var alias = primaryAliases.FirstOrDefault(a => string.Equals(a.CultureCode, CultureCode, StringComparison.InvariantCultureIgnoreCase));
+                    if (alias != null)
+                    {
                         portalAlias = alias.HTTPAlias;
                         DefaultPortalAlias = portalAlias;
-                    }                    
+                    }
                     var DefaultAlias = primaryAliases.FirstOrDefault(a => string.IsNullOrEmpty(a.CultureCode));
                     if (DefaultAlias != null)
                     {
@@ -197,7 +211,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                     if (!string.IsNullOrEmpty(RegexMatchDefaultPortal))
                     {
                         var re = new Regex(RegexMatchDefaultPortal, RegexOptions.IgnoreCase);
-                        if ( re.IsMatch(tab.TabPath) )
+                        if (re.IsMatch(tab.TabPath))
                         {
                             portalAlias = DefaultPortalAlias;
                         }
@@ -309,11 +323,11 @@ namespace Satrabel.Services.Url.FriendlyUrl
             }
 
             friendlyPath = CheckPathLength(Globals.ResolveUrl(friendlyPath), path);
-            
-            if ( IsUrlToLowerCase(tab, friendlyPath) && !friendlyPath.Contains("tabid") )
+
+            if (IsUrlToLowerCase(tab, friendlyPath) && !friendlyPath.Contains("tabid"))
             {
-                    friendlyPath = friendlyPath.ToLower();
-                
+                friendlyPath = friendlyPath.ToLower();
+
             }
 
             return friendlyPath;
@@ -323,8 +337,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
         {
             return UrlRewiterSettings.IsUrlToLowerCase() && tab != null && !UrlRewiterSettings.ExcludeFromLowerCase(tab.PortalID, url);
         }
-
-
+        
         private static IEnumerable<UrlRule> getRules(int PortalId)
         {
             /*
@@ -332,19 +345,19 @@ namespace Satrabel.Services.Url.FriendlyUrl
                 return new List<UrlRule>();
             else
              */
-                return UrlRuleConfiguration.GetConfig(PortalId).Rules.Where(r => r.Action == UrlRuleAction.Rewrite);
+            return UrlRuleConfiguration.GetConfig(PortalId).Rules.Where(r => r.Action == UrlRuleAction.Rewrite);
         }
 
         private static IEnumerable<UrlRule> getRules(int PortalId, string CultureCode)
         {
             if (CultureCode == "") CultureCode = null;
-            return getRules(PortalId).Where(r => r.CultureCode == CultureCode && r.Action == UrlRuleAction.Rewrite);
+            return getRules(PortalId).Where(r => r.CultureCode == CultureCode );
         }
 
         private static UrlRule GetTabUrl(int PortalId, string CultureCode, int TabId)
         {
             var rule = getRules(PortalId, CultureCode).FirstOrDefault(r => r.RuleType == UrlRuleType.Tab && r.Parameters == "tabid=" + TabId.ToString());
-            if (rule == null && !string.IsNullOrEmpty(CultureCode)) 
+            if (rule == null && !string.IsNullOrEmpty(CultureCode))
             {
                 rule = getRules(PortalId, null).FirstOrDefault(r => r.RuleType == UrlRuleType.Tab && r.Parameters == "tabid=" + TabId.ToString());
             }
@@ -355,7 +368,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
         {
             parameter = parameter.ToLower();
             var rule = getRules(PortalId, CultureCode).FirstOrDefault(r => r.RuleType == UrlRuleType.Tab && r.Parameters == parameter);
-            if (rule == null && !string.IsNullOrEmpty(CultureCode)) 
+            if (rule == null && !string.IsNullOrEmpty(CultureCode))
             {
                 rule = getRules(PortalId, null).FirstOrDefault(r => r.RuleType == UrlRuleType.Tab && r.Parameters == parameter);
             }
@@ -376,10 +389,11 @@ namespace Satrabel.Services.Url.FriendlyUrl
 
         private static UrlRule GetModuleUrl(int PortalId, string CultureCode, int TabId, string ModuleQueryString)
         {
-            var rules = getRules(PortalId).Where(r => r.RuleType == UrlRuleType.Module && r.Parameters.ToLower() == ModuleQueryString.ToLower());
+            var rules = getRules(PortalId).Where(r => r.RuleType == UrlRuleType.Module && r.IsMatch(ModuleQueryString));
             // with tabid
             var rule = rules.FirstOrDefault(r => r.CultureCode == CultureCode && r.TabId == TabId);
-            if (rule == null && !string.IsNullOrEmpty(CultureCode)) {
+            if (rule == null && !string.IsNullOrEmpty(CultureCode))
+            {
                 rule = rules.FirstOrDefault(r => r.CultureCode == null && r.TabId == TabId);
             }
             // without tabid
@@ -389,16 +403,16 @@ namespace Satrabel.Services.Url.FriendlyUrl
             }
             if (rule == null && !string.IsNullOrEmpty(CultureCode))
             {
-                rule = rules.FirstOrDefault(r => r.CultureCode == null );
+                rule = rules.FirstOrDefault(r => r.CultureCode == null);
             }
 
             return rule;
         }
 
-       
+
         private static UrlRule GetCustomModuleUrl(int PortalId, string CultureCode, int TabId, string ModuleQueryString)
         {
-            
+
             var rules = getRules(PortalId).Where(r => r.RuleType == UrlRuleType.Custom && r.IsMatch(ModuleQueryString));
 
             // with tabid
@@ -452,10 +466,10 @@ namespace Satrabel.Services.Url.FriendlyUrl
         {
             string friendlyPath = path;
 
-            
+
             if (pageName == Globals.glbDefaultPage)
             {
-                if (friendlyPath != "~/" ) 
+                if (friendlyPath != "~/")
                 {
                     if (friendlyPath.EndsWith("/"))
                     {
@@ -601,7 +615,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                 if ((queryString.StartsWith("?")))
                 {
                     queryString = queryString.TrimStart(Convert.ToChar("?")); //.ToLower();
-                }                            
+                }
                 string[] nameValuePairs = queryString.Split(Convert.ToChar("&"));
                 if (tab != null)
                 {
@@ -609,10 +623,10 @@ namespace Satrabel.Services.Url.FriendlyUrl
                     string TabQueryString = "";
                     string ModuleQueryString = "";
                     string OtherQueryString = "";
-                    
+
                     string CultureCode = null;
                     int PortalId = tab.PortalID;
-                    
+
                     // find the different part of the url
                     foreach (string nameValuePair in nameValuePairs)
                     {
@@ -633,7 +647,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                                 OtherQueryString = OtherQueryString + "&" + nameValuePair;
                             }
                             else if (pair[0].ToLower() == "portalid")
-                            {                                
+                            {
                                 int.TryParse(pair[1], out PortalId);
                                 ModuleQueryString = ModuleQueryString + "&" + nameValuePair;
                             }
@@ -649,7 +663,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                     }
                     ModuleQueryString = ModuleQueryString.TrimStart('&');
                     OtherQueryString = OtherQueryString.TrimStart('&');
-                    
+
                     queryString = "";
 
                     if (LanguageQueryString != "")
@@ -700,7 +714,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                     */
                     if (ModuleQueryString != "")
                     {
-                        var ModuleRule = GetModuleUrl(tab.PortalID, CultureCode, tab.TabID , ModuleQueryString);
+                        var ModuleRule = GetModuleUrl(tab.PortalID, CultureCode, tab.TabID, ModuleQueryString);
                         if (ModuleRule != null)
                         {
                             ModuleQueryString = ModuleRule.Url;
@@ -710,7 +724,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                             // if exist module rewrite rule, dont add pagename at the end
                             DoAddPage = false;
                         }
-                        else 
+                        else
                         {
                             ModuleRule = GetCustomModuleUrl(tab.PortalID, CultureCode, tab.TabID, ModuleQueryString);
                             if (ModuleRule != null)
@@ -739,16 +753,16 @@ namespace Satrabel.Services.Url.FriendlyUrl
                     if (TabQueryString != "")
                     {
                         var Rule = GetTabUrl(tab.PortalID, CultureCode, TabQueryString);
-                        if (Rule != null)                        
+                        if (Rule != null)
                             TabQueryString = Rule.Url;
-                        
+
                         queryString = queryString + "&" + TabQueryString;
 
                         if (Rule != null && Rule.RemoveTab && ModuleQueryString == "" && OtherQueryString == "") //for home page only
                             queryString = "";
 
                     }
-                    
+
 
                     if (ModuleQueryString != "")
                         queryString = queryString + "&" + ModuleQueryString;
@@ -759,7 +773,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
                     queryString = queryString.TrimStart('&');
 
                     // no urlrules for admin pages because the rewriter dont process UrlRules when tabid is present
-                    if (!queryString.ToLower().Split(Convert.ToChar("&")).Any(p=> p.StartsWith("tabid=")))
+                    if (!queryString.ToLower().Split(Convert.ToChar("&")).Any(p => p.StartsWith("tabid=")))
                         nameValuePairs = queryString.Split(Convert.ToChar("&"));
                 }
 
@@ -771,13 +785,13 @@ namespace Satrabel.Services.Url.FriendlyUrl
 
                     //Add name part of name/value pair
                     pathToAppend = pathToAppend + "/" + pair[0];
-                    
+
                     if ((pair.Length > 1))
                     {
                         if ((!String.IsNullOrEmpty(pair[1])))
                         {
                             if ((Regex.IsMatch(pair[1], _regexMatch) == false))
-                            {                                    
+                            {
                                 //Contains Non-AlphaNumeric Characters
                                 if ((pair[0].ToLower() == "tabid")) // only for admin & host tabs
                                 {
@@ -844,11 +858,11 @@ namespace Satrabel.Services.Url.FriendlyUrl
 
             if (DoAddPage /*|| !string.IsNullOrEmpty( FileExtension)*/ )
             {
-                
+
                 friendlyPath = AddPage(friendlyPath, pageName);
-                
+
             }
-            else 
+            else
             {
                 friendlyPath = friendlyPath + FileExtension;
             }
@@ -856,18 +870,18 @@ namespace Satrabel.Services.Url.FriendlyUrl
             {
                 friendlyPath = friendlyPath + "?" + queryStringSpecialChars;
             }
-/*            
-            if (HttpContext.Current.Request.IsAuthenticated) {
-                if (!String.IsNullOrEmpty(queryStringSpecialChars))
-                {
-                    friendlyPath = friendlyPath + "&nocache=true";
-                }
-                else {
-                    friendlyPath = friendlyPath + "?nocache=true";
-                }
-            }
-*/             
-            return friendlyPath; 
+            /*            
+                        if (HttpContext.Current.Request.IsAuthenticated) {
+                            if (!String.IsNullOrEmpty(queryStringSpecialChars))
+                            {
+                                friendlyPath = friendlyPath + "&nocache=true";
+                            }
+                            else {
+                                friendlyPath = friendlyPath + "?nocache=true";
+                            }
+                        }
+            */
+            return friendlyPath;
         }
 
         private Dictionary<string, string> GetQueryStringDictionary(string path)
