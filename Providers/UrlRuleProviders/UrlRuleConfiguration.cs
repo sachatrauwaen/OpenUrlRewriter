@@ -98,7 +98,7 @@ namespace Satrabel.HttpModules.Config
                 {
                     Stopwatch timer = new Stopwatch();
                     timer.Start();
-                    Logger.Info("Rebuild cache start " + portalId);
+                    Logger.Info("Rebuild cache start " + portalId + " at "+ DateTime.Now);
 
                     //config = new UrlRuleConfiguration { Rules = new List<UrlRule>() };
 
@@ -298,7 +298,7 @@ namespace Satrabel.HttpModules.Config
 
 
 
-                    Logger.Info("Rebuild cache " + portalId + " (" + responseTime + ")");
+                    Logger.Info("Rebuild cache end " + portalId + " (" + responseTime + ")" + " at " + DateTime.Now);
                     //DataCache.SetCache(cacheKey, config, TimeSpan.FromMinutes(intCacheTimeout));
 
                     //var onRemove = new CacheItemRemovedCallback(config.RemovedCallBack);

@@ -72,7 +72,9 @@ namespace Satrabel.HttpModules.Provider
                     // Get all urls from provider
                     try
                     {
+                        logger.Info("Get Rules start of provider "+_provider.Name+" for portal " + PortalId  + " at " + DateTime.Now);
                         List<UrlRule> urls = _provider.GetRules(PortalId);
+                        logger.Info("Get Rules end of provider " + _provider.Name + " for portal " + PortalId + " ( "+urls == null ? "null" : urls.Count+" rules ) at " + DateTime.Now);
                         if (urls != null)
                         {
                             foreach (UrlRule url in urls)
