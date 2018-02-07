@@ -51,6 +51,7 @@ namespace Satrabel.HttpModules
         private static void RewriteUrl(HttpApplication app, Uri url, out string portalAlias, out PortalAliasInfo objPortalAlias, out RewriterAction action,
             string applicationPath, bool isSecureConnection, string httpMethod, string rawUrl, string PhysicalPath)
         {
+
             /*
              string applicationPath = "";
 
@@ -86,9 +87,20 @@ namespace Satrabel.HttpModules
             portalAlias = "";
             //determine portal alias looking for longest possible match
             objPortalAlias = GetPortalAlias(url, out portalAlias);
+
+
+
             // action is the object containing all info about rewiting and redirection
             action = new RewriterAction();
-            if (objPortalAlias == null) return;
+            if (objPortalAlias != null && portalAlias != objPortalAlias.HTTPAlias)
+            {
+                action.Alias = objPortalAlias.HTTPAlias;
+                action.DoRedirect = true;
+                action.Raison += "+www";
+                action.RedirectHomePage = true;
+                ProcessRedirect(app, httpMethod, url, action);
+                return;
+            }
             action.LocalPath = url.LocalPath;
             action.HostPort = GetHostPort(url, isSecureConnection);
             action.OriginalUrl = action.HostPort + action.LocalPath;
@@ -111,6 +123,10 @@ namespace Satrabel.HttpModules
             if (objPortalAlias != null)
             {
                 cacheCtrl = new CacheController(objPortalAlias.PortalID);
+#if DEBUG
+                app.Context.Response.AppendHeader("X-OpenUrlRewriter-Rules-count", cacheCtrl.GetUrlRuleConfig().Rules.Count.ToString());
+                cacheCtrl.CheckCache();
+#endif
             }
 #if !DNN71
             // check for language as parameter in the url (OpenUrlRewriter use for public urls, the language after the portal alias)
@@ -506,7 +522,7 @@ namespace Satrabel.HttpModules
                 return true;
             }
             */
-            if (WorkUrl.ToLower().StartsWith("/desktopmodules/") || WorkUrl.ToLower().StartsWith("/api/personabar/"))
+            if (WorkUrl.ToLower().StartsWith("/desktopmodules/") || WorkUrl.StartsWith("/API/"))
             {
                 return true;
             }
@@ -635,15 +651,15 @@ namespace Satrabel.HttpModules
             }
             else if (cacheCtrl != null && action.QueryUrl.ToLower().Contains("tabid") && action.QueryUrl.ToLower().Contains("passwordreset")) // for performance
             {
-            
+
                 string pattern = "^" + RewriterUtils.ResolveUrl(ApplicationPath, "[?&]TabId=(\\d+)(.*)") + "$";
                 Match objMatch = Regex.Match(action.QueryUrl, pattern, RegexOptions.IgnoreCase);
                 //if there is a match
                 if (objMatch.Success)
                 {
-                   
-                        action.QueryUrl = Regex.Replace(action.QueryUrl, pattern, "$2", RegexOptions.IgnoreCase);
-                   
+
+                    action.QueryUrl = Regex.Replace(action.QueryUrl, pattern, "$2", RegexOptions.IgnoreCase);
+
                 }
             }
 
@@ -721,9 +737,13 @@ namespace Satrabel.HttpModules
 
                     RedirectTo += UrlRewiterSettings.Current().FileExtension;
                 }
-                redirect.QueryUrl = redirect.QueryUrl.TrimStart('?', '&');
+
                 if (!string.IsNullOrEmpty(redirect.QueryUrl))
+                {
+                    redirect.QueryUrl = redirect.QueryUrl.TrimStart('?', '&');
                     RedirectTo += (RedirectTo.Contains('?') ? "&" : "?") + redirect.QueryUrl;
+                }
+
                 redirect.RedirectUrl = RedirectTo;
                 /*
                 response.AppendHeader("X-Redirect-Raison", redirect.Raison);
@@ -1331,6 +1351,8 @@ namespace Satrabel.HttpModules
 #else
             string myAlias = GetDomainName(url, true);
 #endif
+
+
             portalAlias = "";
             do
             {
@@ -1400,7 +1422,7 @@ namespace Satrabel.HttpModules
                         //action.RedirectUrl = redirect.RedirectUrl.Replace(parameters.TrimStart('/'), rule.RedirectDestination);
                         action.RedirectModule = rule.RedirectDestination;
                         action.DoRedirect = true;
-                        action.Raison += "+ModuleRule:" + rule.Url + ">" + rule.RedirectDestination + " (" + action.TabId+")";
+                        action.Raison += "+ModuleRule:" + rule.Url + ">" + rule.RedirectDestination + " (" + action.TabId + ")";
 
                     }
                     else if (parameters != rule.Url) // because different case
@@ -1584,7 +1606,7 @@ namespace Satrabel.HttpModules
             AspNetHostingPermissionLevel.High,
             AspNetHostingPermissionLevel.Medium,
             AspNetHostingPermissionLevel.Low,
-            AspNetHostingPermissionLevel.Minimal 
+            AspNetHostingPermissionLevel.Minimal
             })
             {
                 try
