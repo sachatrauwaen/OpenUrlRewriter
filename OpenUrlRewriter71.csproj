@@ -9,6 +9,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <PropertyGroup>
@@ -43,7 +44,8 @@
     <DefineConstants>TRACE;DNN71</DefineConstants>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\</OutputPath>
-    <DocumentationFile>OpenUrlRewriter.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotNetNuke, Version=7.4.1.280, Culture=neutral, processorArchitecture=MSIL">

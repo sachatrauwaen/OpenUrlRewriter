@@ -63,11 +63,7 @@ namespace Satrabel.HttpModules.Provider
                     Rules.Add(rule);
                 }
             }
-
-
-            
-            var roles = TestableRoleController.Instance.GetRoles(PortalId, r => r.SecurityMode != SecurityMode.SecurityRole);
-            
+            var roles = RoleController.Instance.GetRoles(PortalId, r => r.SecurityMode != SecurityMode.SecurityRole);
             foreach (RoleInfo role in roles)
             {
                 if (true)

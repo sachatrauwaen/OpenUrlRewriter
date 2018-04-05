@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 
 using DotNetNuke.Data;
+using DotNetNuke.Instrumentation;
 
 #endregion
 
@@ -31,6 +32,7 @@ namespace Satrabel.Services.Log.UrlLog
 {
     public class BufferedUrlLog
     {
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(BufferedUrlLog));
         public ArrayList UrlLog;
         public string UrlLogStorage;
 
@@ -82,7 +84,7 @@ namespace Satrabel.Services.Log.UrlLog
             }
             catch (Exception exc)
             {
-                DotNetNuke.Instrumentation.DnnLog.Error(exc);
+                Logger.Error(exc);
 
             }
         }

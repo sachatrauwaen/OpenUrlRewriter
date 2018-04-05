@@ -33,6 +33,7 @@ using DotNetNuke.Common;
 using DotNetNuke.ComponentModel;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Sitemap;
+using System.Linq;
 
 #endregion
 
@@ -374,8 +375,9 @@ namespace Satrabel.Services.Sitemap
         {
             bool isChild = false;
             string portalName = null;
-            var aliasController = new PortalAliasController();
-            ArrayList arr = aliasController.GetPortalAliasArrayByPortalID(ps.PortalId);
+            //var aliasController = new PortalAliasController();
+            //ArrayList arr = aliasController.GetPortalAliasArrayByPortalID(ps.PortalId);
+            var arr = PortalAliasController.Instance.GetPortalAliasesByPortalId(ps.PortalId).ToList();
             string serverPath = Globals.GetAbsoluteServerPath(context.Request);
 
             if (arr.Count > 0)

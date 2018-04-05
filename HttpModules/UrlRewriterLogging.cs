@@ -31,6 +31,7 @@ namespace Satrabel.HttpModules
 {
     public class UrlRewriterLogging
     {
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(UrlRewriterLogging));
 
         public void OnPreRequestHandlerExecute(object sender, EventArgs e)
         {
@@ -109,9 +110,9 @@ namespace Satrabel.HttpModules
                 objEventLogInfo.LogTypeKey = EventLogController.EventLogType.HOST_ALERT.ToString();
                 objEventLog.AddLog(objEventLogInfo);
                  
-                DnnLog.Error(objEventLogInfo);
+                Logger.Error(objEventLogInfo);
                 */
-                DnnLog.Error(ex);
+                Logger.Error(ex);
             }
         }
 
@@ -141,7 +142,7 @@ namespace Satrabel.HttpModules
                 objEventLogInfo.LogTypeKey = EventLogController.EventLogType.HOST_ALERT.ToString();
                 objEventLog.AddLog(objEventLogInfo);
                  */
-                DnnLog.Error(ex);
+                Logger.Error(ex);
 
             }
         }
@@ -277,7 +278,7 @@ namespace Satrabel.HttpModules
             }
             catch (Exception ex)
             {
-                DnnLog.Error(ex);
+                Logger.Error(ex);
             }
         }
 
@@ -303,7 +304,7 @@ namespace Satrabel.HttpModules
                 }
                 catch (Exception exc)
                 {
-                    DnnLog.Error(exc);
+                    Logger.Error(exc);
 
                 }
 
@@ -416,7 +417,7 @@ namespace Satrabel.HttpModules
                         statusCode = httpException.GetHttpCode();
                     }
                 }
-                //DnnLog.Error("{0} : {1}", httpContext.Request.Url.AbsoluteUri, statusCode); 
+                //Logger.Error("{0} : {1}", httpContext.Request.Url.AbsoluteUri, statusCode); 
                 //System.Diagnostics.Debug.WriteLine(originalurl + " : " + statusCode);
 
                 string strSiteLogStorage = "D"; // Host.SiteLogStorage;
@@ -438,7 +439,8 @@ namespace Satrabel.HttpModules
                     DoLog = false;
                 }
 
-                UserInfo objUserInfo = UserController.GetCurrentUserInfo();
+                //UserInfo objUserInfo = UserController.GetCurrentUserInfo();
+                UserInfo objUserInfo = UserController.Instance.GetCurrentUserInfo();
                 if (!UrlRewiterSettings.IsLogAuthentificatedUsers(PortalId) && objUserInfo != null && objUserInfo.UserID != -1)
                 {
                     DoLog = false;
@@ -466,7 +468,7 @@ namespace Satrabel.HttpModules
             }
             catch (Exception exc)
             {
-                DnnLog.Error(exc);
+                Logger.Error(exc);
             }
         }
 
@@ -495,7 +497,7 @@ namespace Satrabel.HttpModules
             }
 
 
-            DnnLog.Error("{0} : {1}", httpContext.Request.Url.AbsoluteUri, statusCode);
+            Logger.Error(string.Format("{0} : {1}", httpContext.Request.Url.AbsoluteUri, statusCode));
 
 
             var redirectUrl = string.Empty;
@@ -562,7 +564,7 @@ namespace Satrabel.HttpModules
             NameValueCollection coll = HttpContext.Current.Request.QueryString;
             string[] arrKeys;
             string[] arrValues;
-            PortalSettings settings = PortalController.GetCurrentPortalSettings();
+            PortalSettings settings = PortalController.Instance.GetCurrentPortalSettings();
             arrKeys = coll.AllKeys;
 
             for (int i = 0; i <= arrKeys.GetUpperBound(0); i++)
