@@ -106,7 +106,10 @@ namespace Satrabel.HttpModules
             action.OriginalUrl = action.HostPort + action.LocalPath;
             action.Alias = portalAlias;
 #if DNN71
-            action.CultureCode = objPortalAlias.CultureCode;
+            if (objPortalAlias != null)
+            {
+                action.CultureCode = objPortalAlias.CultureCode;
+            }
 #endif
             action.QueryUrl = url.Query;
             action.ModuleUrl = "";
