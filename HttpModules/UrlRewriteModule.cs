@@ -240,7 +240,7 @@ namespace Satrabel.HttpModules
                 //DNN 5479
                 //request.physicalPath throws an exception when the path of the request exceeds 248 chars.
                 //example to test: http://localhost/dotnetnuke_2/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/default.aspx
-                DnnLog.Error("RawUrl:"+request.RawUrl + " / Referrer:" + request.UrlReferrer.AbsoluteUri, exc);
+                DnnLog.Error("RawUrl:"+request.RawUrl + " / Referrer:" + request?.UrlReferrer?.AbsoluteUri + " / Client IP:" + request?.UserHostAddress, exc);
 
             }
 #if DEBUG
