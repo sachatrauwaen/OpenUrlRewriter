@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="OpenUrlRewriter" type="Module" version="01.04.00">
+    <package name="OpenUrlRewriter" type="Module" version="01.04.02">
       <friendlyName>OpenUrlRewriter</friendlyName>
       <description>Satrabel OpenUrlRewriter module</description>
       <iconFile>~/Icons/Sigma/AdvancedUrlMngmt_32x32.png</iconFile>

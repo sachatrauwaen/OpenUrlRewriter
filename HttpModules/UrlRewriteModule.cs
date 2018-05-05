@@ -209,6 +209,7 @@ namespace Satrabel.HttpModules
                 || request.Url.LocalPath.ToLower().Contains("scriptresource.axd")
                 || request.Url.LocalPath.ToLower().Contains("webresource.axd")
                 || request.Url.LocalPath.ToLower().Contains("dmxdav.axd")
+                || request.Url.LocalPath.ToLower().Contains("/api/personabar/")
                 )
             {
                 return;
@@ -516,7 +517,8 @@ namespace Satrabel.HttpModules
                         {
 							//redirect to secure connection
                             app.Response.AppendHeader("X-Redirect-Reason", "redirect to secure");
-                            response.Redirect(strURL, true);
+                            // response.Redirect(strURL, true);
+                            response.RedirectPermanent(strURL, true);
                         }
                         else //when switching to an unsecure page, use a clientside redirector to avoid the browser security warning
                         {
