@@ -525,7 +525,7 @@ namespace Satrabel.Services.Url.FriendlyUrl
             string matchString = "";
             if (portalAlias != Null.NullString)
             {
-                if (HttpContext.Current.Items["UrlRewrite:OriginalUrl"] != null)
+                if (HttpContext.Current?.Items["UrlRewrite:OriginalUrl"] != null)
                 {
                     string httpAlias = Globals.AddHTTP(portalAlias).ToLowerInvariant();
                     string originalUrl = HttpContext.Current.Items["UrlRewrite:OriginalUrl"].ToString().ToLowerInvariant();
