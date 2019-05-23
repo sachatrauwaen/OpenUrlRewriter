@@ -210,6 +210,7 @@ namespace Satrabel.HttpModules
                 || request.Url.LocalPath.ToLower().Contains("scriptresource.axd")
                 || request.Url.LocalPath.ToLower().Contains("webresource.axd")
                 || request.Url.LocalPath.ToLower().Contains("dmxdav.axd")
+                || request.Url.LocalPath.ToLower().Contains("dependencyhandler.axd")
                 || request.Url.LocalPath.ToLower().Contains("/api/personabar/")
                 )
             {
