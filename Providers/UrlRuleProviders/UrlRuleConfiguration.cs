@@ -192,24 +192,27 @@ namespace Satrabel.HttpModules.Config
                             UrlRuleInfo ruleInfo = ruleInfoLst.FirstOrDefault();
                             if (ruleInfo == null)
                             {
-                                ruleInfo = new UrlRuleInfo()
+                                if (!string.IsNullOrEmpty(rule.Url) && rule.Url.Length < 500)
                                 {
-                                    PortalId = portalId,
-                                    DateTime = DateTime.Now,
-                                    RuleType = (int)rule.RuleType,
-                                    CultureCode = rule.CultureCode,
-                                    TabId = rule.TabId,
-                                    Url = rule.Url,
+                                    ruleInfo = new UrlRuleInfo()
+                                    {
+                                        PortalId = portalId,
+                                        DateTime = DateTime.Now,
+                                        RuleType = (int)rule.RuleType,
+                                        CultureCode = rule.CultureCode,
+                                        TabId = rule.TabId,
+                                        Url = rule.Url,
 
-                                    Parameters = rule.Parameters,
-                                    RuleAction = (int)rule.Action,
-                                    RemoveTab = rule.RemoveTab,
-                                    RedirectDestination = rule.RedirectDestination,
-                                    RedirectStatus = rule.RedirectStatus
-                                };
-                                ruleInfo.UrlRuleId = UrlRuleController.AddUrlRule(ruleInfo);
-                                Logger.Info("AddUrlRule (UrlRuleId=" + ruleInfo.UrlRuleId + ")");
-                                storedRules.Add(ruleInfo);
+                                        Parameters = rule.Parameters,
+                                        RuleAction = (int)rule.Action,
+                                        RemoveTab = rule.RemoveTab,
+                                        RedirectDestination = rule.RedirectDestination,
+                                        RedirectStatus = rule.RedirectStatus
+                                    };
+                                    ruleInfo.UrlRuleId = UrlRuleController.AddUrlRule(ruleInfo);
+                                    Logger.Info("AddUrlRule (UrlRuleId=" + ruleInfo.UrlRuleId + ")");
+                                    storedRules.Add(ruleInfo);
+                                }
                             }
                             else
                             {
