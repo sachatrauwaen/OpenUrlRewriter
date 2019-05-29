@@ -22,6 +22,7 @@ namespace Satrabel.Services.Cache.FileBasedCachingProvider
 {
     public class OpenUrlRewriterFBCachingProvider : CachingProvider //FBCachingProvider
     {
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(OpenUrlRewriterFBCachingProvider));
         public override void Insert(string cacheKey, object itemToCache, DNNCacheDependency dependency, DateTime absoluteExpiration, TimeSpan slidingExpiration, CacheItemPriority priority,
                                    CacheItemRemovedCallback onRemoveCallback)
         {
@@ -50,25 +51,25 @@ namespace Satrabel.Services.Cache.FileBasedCachingProvider
                                 {
                                     int PortalId = DotNetNuke.Entities.Portals.PortalSettings.Current.PortalId;
                                     Remove(GetCacheKey("UrlRuleConfig" + PortalId));
-                                    DnnLog.Trace("Clear cache " + key + " portal "+ PortalId + " raison "+ removedReason.ToString());
+                                    Logger.Trace("Clear cache " + key + " portal "+ PortalId + " raison "+ removedReason.ToString());
                                 }
                                 else
                                 {
-                                   // DnnLog.Trace("Clear cache not executed " + key + " raison " + removedReason.ToString());
+                                   // Logger.Trace("Clear cache not executed " + key + " raison " + removedReason.ToString());
                                 }
                             }
                         }
                     }
                     if (key.StartsWith("UrlRuleConfig"))
                     {
-                        DnnLog.Trace("cache " + key + "claired : " + removedReason.ToString());
+                        Logger.Trace("cache " + key + "claired : " + removedReason.ToString());
                     }
                 }
             }
             catch (Exception exc)
             {
                 //Swallow exception            
-                DnnLog.Error(exc);
+                Logger.Error(exc);
             }
         }
 

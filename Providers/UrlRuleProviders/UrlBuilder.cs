@@ -42,8 +42,8 @@ namespace Satrabel.HttpModules.Provider
 {
     public class UrlBuilder
     {
-        DnnLogger logger = DnnLogger.GetClassLogger(typeof(UrlRuleConfiguration));
-
+        
+        private static readonly ILog logger = LoggerSource.Instance.GetLogger(typeof(UrlRuleConfiguration));
         public UrlBuilder()
         {
             LoadProviders();

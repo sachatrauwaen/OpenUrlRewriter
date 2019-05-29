@@ -57,6 +57,7 @@ namespace Satrabel.HttpModules
 {
     public class UrlRewriteModule : IHttpModule
     {
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(UrlRewriteModule));
         public string ModuleName
         {
             get
@@ -209,6 +210,7 @@ namespace Satrabel.HttpModules
                 || request.Url.LocalPath.ToLower().Contains("scriptresource.axd")
                 || request.Url.LocalPath.ToLower().Contains("webresource.axd")
                 || request.Url.LocalPath.ToLower().Contains("dmxdav.axd")
+                || request.Url.LocalPath.ToLower().Contains("dependencyhandler.axd")
                 || request.Url.LocalPath.ToLower().Contains("/api/personabar/")
                 )
             {
@@ -240,7 +242,7 @@ namespace Satrabel.HttpModules
                 //DNN 5479
                 //request.physicalPath throws an exception when the path of the request exceeds 248 chars.
                 //example to test: http://localhost/dotnetnuke_2/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/default.aspx
-                DnnLog.Error("RawUrl:"+request.RawUrl + " / Referrer:" + request.UrlReferrer.AbsoluteUri, exc);
+                Logger.Error("RawUrl:"+request.RawUrl + " / Referrer:" + request.UrlReferrer.AbsoluteUri, exc);
 
             }
 #if DEBUG
@@ -308,7 +310,8 @@ namespace Satrabel.HttpModules
                         childAlias = childAlias.Replace(":" + request.Url.Port, "");
                     }
 
-                    if (PortalAliasController.GetPortalAliasInfo(childAlias) != null)
+                    //if (PortalAliasController.GetPortalAliasInfo(childAlias) != null)
+                    if (PortalAliasController.Instance.GetPortalAlias(childAlias) != null)
                     {
                         //check if the domain name contains the alias
                         if (childAlias.IndexOf(domainName, StringComparison.OrdinalIgnoreCase) == -1)
@@ -344,7 +347,8 @@ namespace Satrabel.HttpModules
                         {
                             //if the TabId is not for the correct domain
                             //see if the correct domain can be found and redirect it 
-                            portalAliasInfo = PortalAliasController.GetPortalAliasInfo(domainName);
+                            //portalAliasInfo = PortalAliasController.GetPortalAliasInfo(domainName);
+                            portalAliasInfo = PortalAliasController.Instance.GetPortalAlias(domainName);
                             if (portalAliasInfo != null && !request.Url.LocalPath.ToLower().EndsWith("/linkclick.aspx"))
                             {
                                 if (app.Request.Url.AbsoluteUri.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase))
@@ -373,7 +377,9 @@ namespace Satrabel.HttpModules
                 }
                 //using the DomainName above will find that alias that is the domainname portion of the Url
                 //ie. dotnetnuke.com will be found even if zzz.dotnetnuke.com was entered on the Url
-                portalAliasInfo = PortalAliasController.GetPortalAliasInfo(portalAlias);
+                //portalAliasInfo = PortalAliasController.GetPortalAliasInfo(portalAlias);
+                portalAliasInfo = PortalAliasController.Instance.GetPortalAlias(portalAlias);
+
                 if (portalAliasInfo != null)
                 {
                     portalId = portalAliasInfo.PortalID;
@@ -410,13 +416,13 @@ namespace Satrabel.HttpModules
             catch (ThreadAbortException exc)
             {
                 //Do nothing if Thread is being aborted - there are two response.redirect calls in the Try block
-                DnnLog.Debug(exc);
+                Logger.Debug(exc);
 
             }
             catch (Exception ex)
             {
 				//500 Error - Redirect to ErrorPage
-                DnnLog.Error(ex);
+                Logger.Error(ex);
 
                 strURL = "~/ErrorPage.aspx?status=500&error=" + server.UrlEncode(ex.Message);
                 HttpContext.Current.Response.Clear();
@@ -430,7 +436,7 @@ namespace Satrabel.HttpModules
 
                 // load PortalSettings and HostSettings dictionaries into current context
                 // specifically for use in DotNetNuke.Web.Client, which can't reference DotNetNuke.dll to get settings the normal way
-                app.Context.Items.Add("PortalSettingsDictionary", PortalController.GetPortalSettingsDictionary(portalId));
+                app.Context.Items.Add("PortalSettingsDictionary", PortalController.Instance.GetPortalSettings(portalId));
                 app.Context.Items.Add("HostSettingsDictionary", HostController.Instance.GetSettingsDictionary());
 #if DNN71                
                 if (portalSettings.PortalAliasMappingMode == PortalSettings.PortalAliasMapping.Redirect &&

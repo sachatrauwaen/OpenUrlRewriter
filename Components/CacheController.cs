@@ -21,8 +21,8 @@ namespace Satrabel.OpenUrlRewriter.Components
 {
     public class CacheController
     {
-        private static readonly DnnLogger Logger = DnnLogger.GetClassLogger(typeof(CacheController));
-
+        
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(CacheController));
 
         private int _portalId;
         private IEnumerable<UrlRule> _rules;
