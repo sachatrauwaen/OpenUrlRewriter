@@ -22,6 +22,7 @@ namespace Satrabel.HttpModules.Provider
     /// </summary>
     public abstract class UrlRuleProvider
     {
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(UrlRuleProvider));
         protected UrlRuleProvider(){}
         
         public string Name {
@@ -69,7 +70,7 @@ namespace Satrabel.HttpModules.Provider
                     Value = bool.Parse(objProvider.Attributes[key]);
                 }
                 catch (Exception ex) {
-                    DnnLog.Error(ex);
+                    Logger.Error(ex);
                 }
             }
             return Value;

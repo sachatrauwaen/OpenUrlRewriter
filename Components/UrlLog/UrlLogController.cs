@@ -44,6 +44,8 @@ namespace Satrabel.Services.Log.UrlLog
 
     public class UrlLogController
     {
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(UrlLogController));
+
         private const string ModuleQualifier = "OpenUrlRewriter_";
 
         public void AddUrlLog(int PortalId, int UserId, string Referrer, string URL, string OriginalURL, string RedirectURL, string UserAgent, string UserHostAddress, string UserHostName, int TabId, int Statuscode, int UrlLogBuffer,
@@ -142,8 +144,7 @@ namespace Satrabel.Services.Log.UrlLog
             }
             catch (Exception exc)
             {
-                DotNetNuke.Instrumentation.DnnLog.Error(exc);
-
+                Logger.Error(exc);
             }
         }
 
@@ -200,7 +201,7 @@ namespace Satrabel.Services.Log.UrlLog
                 }
 				catch (Exception ex) //can not create file
 				{
-					DnnLog.Error(ex);
+					Logger.Error(ex);
 				}
             }
             try
@@ -234,7 +235,7 @@ namespace Satrabel.Services.Log.UrlLog
             }
 			catch (Exception ex) //can not open file
 			{
-				DnnLog.Error(ex);
+				Logger.Error(ex);
 			}
         }
     }

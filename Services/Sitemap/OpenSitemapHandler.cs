@@ -48,7 +48,7 @@ namespace Satrabel.Services.Sitemap
             try
             {
                 HttpResponse Response = context.Response;
-                PortalSettings ps = PortalController.GetCurrentPortalSettings();
+                PortalSettings ps = PortalController.Instance.GetCurrentPortalSettings();
 
                 Response.ContentType = "text/xml";
                 Response.ContentEncoding = Encoding.UTF8;

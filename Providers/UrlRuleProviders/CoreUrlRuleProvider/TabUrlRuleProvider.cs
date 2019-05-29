@@ -25,8 +25,8 @@ namespace Satrabel.HttpModules.Provider
 
     public class TabUrlRuleProvider : UrlRuleProvider
     {
-        private static readonly DnnLogger Logger = DnnLogger.GetClassLogger(typeof(TabUrlRuleProvider));
-
+        
+        private static readonly ILog Logger = LoggerSource.Instance.GetLogger(typeof(TabUrlRuleProvider));
 
         private const string ProviderName = "tabUrlRuleProvider";
         private readonly bool UseKeyWordsDefault;
