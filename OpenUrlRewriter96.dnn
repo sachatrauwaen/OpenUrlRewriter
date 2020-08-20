@@ -1,0 +1,320 @@
+<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="OpenUrlRewriter" type="Module" version="01.05.00">
+      <friendlyName>OpenUrlRewriter</friendlyName>
+      <description>Satrabel OpenUrlRewriter module</description>
+      <iconFile>~/Icons/Sigma/AdvancedUrlMngmt_32x32.png</iconFile>
+      <owner>
+        <name>Sacha Trauwaen</name>
+        <organization>Satrabel</organization>
+        <url>http://www.satrabel.be</url>
+        <email>support@satrabel.be</email>
+      </owner>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <azureCompatible>true</azureCompatible>
+      <dependencies>
+        <dependency type="CoreVersion">09.06.00</dependency>
+      </dependencies>
+
+      <components>
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\OpenUrlRewriter</basePath>
+            <script type="Install">
+              <path>Providers\DataProviders\SqlDataProvider</path>
+              <name>00.02.00.SqlDataProvider</name>
+              <version>00.02.00</version>
+            </script>
+            <script type="Install">
+              <path>Providers\DataProviders\SqlDataProvider</path>
+              <name>00.03.00.SqlDataProvider</name>
+              <version>00.03.00</version>
+            </script>
+            <script type="Install">
+              <path>Providers\DataProviders\SqlDataProvider</path>
+              <name>01.01.02.SqlDataProvider</name>
+              <version>01.01.02</version>
+            </script>            
+            <script type="UnInstall">
+              <path>Providers\DataProviders\SqlDataProvider</path>
+              <name>Uninstall.SqlDataProvider</name>
+              <version>01.01.02</version>
+            </script>
+          </scripts>
+        </component>
+
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules/OpenUrlRewriter</basePath>
+            <resourceFile>
+              <name>Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+
+        <component type="Module">
+          <desktopModule>
+            <moduleName>OpenUrlRewriter</moduleName>
+            <foldername>OpenUrlRewriter</foldername>
+            <businessControllerClass>Satrabel.Modules.OpenUrlRewriter.Components.OpenUrlRewriterController</businessControllerClass>
+            <supportedFeatures />
+            <moduleDefinitions>
+              <moduleDefinition>
+                <friendlyName>OpenUrlRewriter</friendlyName>
+                <defaultCacheTime>0</defaultCacheTime>
+                <moduleControls>
+                  <moduleControl>
+                    <controlKey />
+                    <controlSrc>DesktopModules/OpenUrlRewriter/View.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle />
+                    <controlType>View</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>Edit</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/Edit.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Content</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>UrlLog_Settings</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/UrlLog_Settings.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Url Log Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+
+                  <moduleControl>
+                    <controlKey>log_settings</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/UrlLog_Settings.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Url Log Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>log_view</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/UrlLog_View.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Url Log View</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>rules_edit</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/UrlRule_Edit.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Url Rule Edit</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>rules_view</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/UrlRule_View.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Url Rule View</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>cache_view</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/UrlRuleCache_View.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Url Rule Cache View</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>TestHtml</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/TestHtml_View.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Search and Replace</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>Settings</controlKey>
+                    <controlSrc>DesktopModules/OpenUrlRewriter/Settings.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>OpenUrlRewriter Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                </moduleControls>
+              </moduleDefinition>
+            </moduleDefinitions>
+          </desktopModule>
+        </component>
+        <component type="Assembly">
+          <assemblies>
+            <assembly>
+              <path>bin</path>
+              <name>Satrabel.OpenUrlRewriter.dll</name>
+            </assembly>
+          </assemblies>
+        </component>
+
+        <component type="Config">
+          <config>
+            <configFile>web.config</configFile>
+            <install>
+              <configuration>
+                <nodes>
+                  <node path="/configuration/configSections/sectionGroup[@name='dotnetnuke']"
+                        action="update" key="name" collision="overwrite">
+                    <section name="urlRule" requirePermission="false" type="DotNetNuke.Framework.Providers.ProviderConfigurationHandler, DotNetNuke"/>                    
+                  </node>
+                  <node path="/configuration/dotnetnuke/friendlyUrl/providers"
+                        action="update" key="name" collision="ignore">
+                    <add name="OpenFriendlyUrl" type="Satrabel.Services.Url.FriendlyUrl.OpenFriendlyUrlProvider, Satrabel.OpenUrlRewriter" includePageName="true" regexMatch="[^a-zA-Z0-9 _-]" urlFormat="advanced" fileExtension="" />
+                  </node>
+                  <node path="/configuration/dotnetnuke/friendlyUrl" action="updateattribute" name="defaultProvider" value="OpenFriendlyUrl" collision="overwrite" />
+
+                  <node path="/configuration/dotnetnuke" action="update" targetpath="/configuration/dotnetnuke/urlRule" collision="ignore">
+                    <urlRule defaultProvider="">
+                      <providers>
+                        <clear/>
+                        <add name="tabUrlRuleProvider" type="Satrabel.HttpModules.Provider.TabUrlRuleProvider, Satrabel.OpenUrlRewriter" useKeyWords="true"/>
+                        <add name="userUrlRuleProvider" type="Satrabel.HttpModules.Provider.UserUrlRuleProvider, Satrabel.OpenUrlRewriter"/>
+                        <add name="ctlUrlRuleProvider" type="Satrabel.HttpModules.Provider.CtlUrlRuleProvider, Satrabel.OpenUrlRewriter"/>
+                      </providers>
+                    </urlRule>
+                  </node>
+  
+                  <node path="/configuration/system.webServer/modules/add[@name='UrlRewrite']" action="remove" collision="overwrite" />
+
+                  <node path="/configuration/system.webServer/modules/add[@name='RequestFilter']"
+                        action="insertafter" key="name" collision="overwrite">
+                    <add name="UrlRewrite" type="Satrabel.HttpModules.UrlRewriteModule, Satrabel.OpenUrlRewriter" preCondition="managedHandler" />
+                  </node>
+
+                  <node path="/configuration/system.web/httpModules/add[@name='UrlRewrite']" action="remove" collision="overwrite" />
+
+                  <node path="/configuration/system.web/httpModules/add[@name='RequestFilter']"
+                        action="insertafter" key="name" collision="overwrite">
+                    <add name="UrlRewrite" type="Satrabel.HttpModules.UrlRewriteModule, Satrabel.OpenUrlRewriter" />
+                  </node>
+
+
+                  <node path="/configuration/dotnetnuke/caching/providers/add[@name='OpenUrlRewriterFBCachingProvider']"
+                        action="remove" collision="overwrite" />
+                  <node path="/configuration/dotnetnuke/caching" action="updateattribute" name="defaultProvider" value="FileBasedCachingProvider" collision="overwrite" />
+                  
+                  <node path="/configuration/dotnetnuke/sitemap/providers"
+                        action="update" key="name" collision="ignore">
+                    <add name="openUrlRewriterSitemapProvider" type="Satrabel.SitemapProviders.OpenUrlRewriterSitemapProvider, Satrabel.OpenUrlRewriter" providerPath="~\Providers\MembershipProviders\Sitemap\OpenUrlRewriterSitemapProvider\"/>
+                  </node>
+                  <node path="/configuration/dotnetnuke/sitemap" action="updateattribute" name="defaultProvider" value="openUrlRewriterSitemapProvider" collision="overwrite" />
+                  <node path="/configuration/dotnetnuke/sitemap/providers/add[@name='coreSitemapProvider']" action="remove" collision="overwrite" />
+
+                  <node path="/configuration/system.webServer/handlers"
+                        action="update" key="name" collision="overwrite">
+                    <add name="SitemapHandler" path="Sitemap.aspx" verb="*" type="Satrabel.Services.Sitemap.OpenSitemapHandler, Satrabel.OpenUrlRewriter" preCondition="integratedMode" />
+                  </node>
+                  <node path="/configuration/system.webServer/handlers"
+                        action="update" key="name" collision="overwrite">
+                    <add name="OpenSitemapHandler" path="Sitemap.xml" verb="*" type="Satrabel.Services.Sitemap.OpenSitemapHandler, Satrabel.OpenUrlRewriter" preCondition="integratedMode" />
+                  </node>
+
+
+                  <node path="/configuration/system.web/httpHandlers"
+                        action="update" key="path" collision="overwrite">
+                    <add verb="*" path="Sitemap.aspx" type="Satrabel.Services.Sitemap.OpenSitemapHandler, Satrabel.OpenUrlRewriter" />
+                  </node>
+                  <node path="/configuration/system.web/httpHandlers"
+                        action="update" key="path" collision="overwrite">
+                    <add verb="*" path="Sitemap.xml" type="Satrabel.Services.Sitemap.OpenSitemapHandler, Satrabel.OpenUrlRewriter" />
+                  </node>
+
+
+                </nodes>
+              </configuration>
+            </install>
+            <uninstall>
+              <configuration>
+                <nodes>
+                  <node path="/configuration/configSections/sectionGroup[@name='dotnetnuke']/section[@name='urlRule']"
+                        action="remove"  />
+                  <node path="/configuration/dotnetnuke/friendlyUrl/providers/add[@name='OpenFriendlyUrl']"
+                        action="remove" />
+                  <node path="/configuration/dotnetnuke/friendlyUrl" action="updateattribute" name="defaultProvider" value="DNNFriendlyUrl" />
+                  <node path="/configuration/dotnetnuke/urlRule"
+                        action="remove" />
+
+                  <node path="/configuration/system.webServer/modules/add[@name='UrlRewrite']" action="remove" />
+
+                  <node path="/configuration/system.webServer/modules/add[@name='RequestFilter']"
+                        action="insertafter" key="name" collision="overwrite">
+                    <add name="UrlRewrite" type="DotNetNuke.HttpModules.UrlRewriteModule, DotNetNuke.HttpModules" preCondition="managedHandler" />
+                  </node>
+
+                  <node path="/configuration/system.web/httpModules/add[@name='UrlRewrite']" action="remove" />
+
+                  <node path="/configuration/system.web/httpModules/add[@name='RequestFilter']"
+                        action="insertafter" key="name" collision="overwrite">
+                    <add name="UrlRewrite" type="DotNetNuke.HttpModules.UrlRewriteModule, DotNetNuke.HttpModules" />
+                  </node>
+
+                  <node path="/configuration/dotnetnuke/caching/providers/add[@name='OpenUrlRewriterFBCachingProvider']"
+                        action="remove" />
+                  <node path="/configuration/dotnetnuke/caching" action="updateattribute" name="defaultProvider" value="FileBasedCachingProvider" />
+                  
+                  <node path="/configuration/dotnetnuke/sitemap/providers"
+                        action="update" key="name" collision="ignore">
+                    <add name="coreSitemapProvider" type="DotNetNuke.SitemapProviders.CoreSitemapProvider, DotNetNuke" providerPath="~\Providers\MembershipProviders\Sitemap\CoreSitemapProvider\" />
+                  </node>
+                  <node path="/configuration/dotnetnuke/sitemap/providers/add[@name='openUrlRewriterSitemapProvider']" action="remove" />
+                  <node path="/configuration/dotnetnuke/sitemap" action="updateattribute" name="defaultProvider" value="coreSitemapProvider" />
+
+                  <node path="/configuration/system.webServer/handlers"
+                        action="update" key="name" collision="overwrite">
+                    <add name="SitemapHandler" path="Sitemap.aspx" verb="*" type="DotNetNuke.Services.Sitemap.SitemapHandler, DotNetNuke" preCondition="integratedMode" />
+                  </node>
+                  
+                  <node path="/configuration/system.webServer/handlers/add[@name='OpenSitemapHandler']" action="remove" />
+
+                  <node path="/configuration/system.web/httpHandlers"
+                        action="update" key="path" collision="overwrite">
+                    <add verb="*" path="Sitemap.aspx" type="DotNetNuke.Services.Sitemap.SitemapHandler, DotNetNuke" />
+                  </node>
+
+                    <node path="/configuration/system.web/httpHandlers/add[@path='Sitemap.xml']" action="remove" />
+
+
+                    </nodes>
+              </configuration>
+            </uninstall>
+          </config>
+        </component>
+
+
+      </components>
+    </package>
+  </packages>
+</dotnetnuke>
