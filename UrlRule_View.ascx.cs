@@ -28,10 +28,11 @@ namespace Satrabel.Modules.OpenUrlRewriter
 
                 GridView1.DataSource = UrlRuleController.GetUrlRules(PortalId).OrderByDescending(r=> r.RuleType).ThenByDescending(r => r.Parameters);
                 GridView1.DataBind();
-
-
             }
-            GridView1.HeaderRow.TableSection = TableRowSection.TableHeader;
+            if (GridView1.Rows.Count > 0)
+            {
+                GridView1.HeaderRow.TableSection = TableRowSection.TableHeader;
+            }
         }
 
         protected string EditUrlRule(object oUrlRuleId)
